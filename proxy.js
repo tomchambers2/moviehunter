@@ -20,6 +20,13 @@ function getData(url) {
 function requestHandler(request, response) {
 	requestedUrl = url.parse(request.url, true).query.url;
 
+	response.setHeader('Access-Control-Allow-Origin', 'http://localhost:9000');
+    // Request methods you wish to allow
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    // Request headers you wish to allow
+    response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+
+
 	if (!requestedUrl) {
 		response.writeHead(400);
 		response.write("ERROR: No url supplied for proxy to get, add a url GET parameter");
@@ -32,6 +39,9 @@ function requestHandler(request, response) {
 	getData(requestedUrl).done(function(res) {
 		response.writeHead(200);
 		console.log('Proxy get request success');
+
+		console.log(res);
+
 		response.write(res);
 		response.end();
 	});

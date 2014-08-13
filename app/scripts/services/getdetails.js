@@ -8,11 +8,13 @@
  * Service in the cinemaApp.
  */
 angular.module('cinemaApp')
-  .service('Getdetails', function Getdetails($http) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
-    var promise = $http.get('http://www.google.com').then(function (response) {
-    	console.log(response);
-    	return response.data;
-    });
-    return promise;
+  .service('Proxy', function Getdetails($http) {
+  	this.get = function(url) {
+  		console.log(url);
+	    var promise = $http.get('http://localhost:8080?url='+url).then(function (response) {
+	    	console.log(response);
+	    	return response.data;
+	    });
+	    return promise;
+	};
   });
