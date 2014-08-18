@@ -15,7 +15,14 @@ angular
     'ngResource',
     'ngRoute',
     'ngSanitize',
-    'ngTouch'
+    'ngTouch',
+    'google-maps',
+    'ngAutocomplete',
+    'geocoder',
+    'ngFitText',
+    'youtube-embed',
+    'LocalStorageModule',
+    'angularMoment'
   ])
   .config(function ($routeProvider) {
     $routeProvider
@@ -23,11 +30,34 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/about', {
-        templateUrl: 'views/about.html',
-        controller: 'AboutCtrl'
+      .when('/video', {
+        templateUrl: 'views/video.html',
+        controller: 'VideoCtrl'
+      })
+      .when('/choosedate', {
+        templateUrl: 'views/choosedate.html',
+        controller: 'ChoosedateCtrl'
+      })
+      .when('/pickcinema', {
+        templateUrl: 'views/pickcinema.html',
+        controller: 'PickcinemaCtrl'
+      })
+      .when('/choosetime', {
+        templateUrl: 'views/choosetime.html',
+        controller: 'ChoosetimeCtrl'
+      })
+      .when('/summary', {
+        templateUrl: 'views/summary.html',
+        controller: 'SummaryCtrl'
+      })
+      .when('/maptest', {
+        templateUrl: 'views/maptest.html',
+        controller: 'MaptestCtrl'
       })
       .otherwise({
         redirectTo: '/'
       });
-  });
+  })
+ .config(['localStorageServiceProvider', function(localStorageServiceProvider) {
+  localStorageServiceProvider.setPrefix('ls');
+ }]);

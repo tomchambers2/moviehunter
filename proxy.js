@@ -1,19 +1,35 @@
 var http = require('follow-redirects').http;
+var https = require('https');
 var Promise = require('promise');
 var url = require('url');
 
-function getData(url) {
+function getData(urlToFetch) {
 	return new Promise(function (resolve, reject) {
-		http.get(url, function(response) {
-			response.setEncoding('utf8')
-			var data = '';
-			response.on('data', function (chunk) {
-				data += chunk;
+		if (url.parse(urlToFetch).protocol === 'https:') {
+			https.get(urlToFetch, function(response) {
+				console.log(urlToFetch);
+				response.setEncoding('utf8')
+				var data = '';
+				response.on('data', function (chunk) {
+					data += chunk;
+				});
+				response.on('end', function() {
+					resolve(data);
+				})
 			});
-			response.on('end', function() {
-				resolve(data);
-			})
-		});
+		} else {
+			console.log(urlToFetch);
+			http.get(urlToFetch, function(response) {
+				response.setEncoding('utf8')
+				var data = '';
+				response.on('data', function (chunk) {
+					data += chunk;
+				});
+				response.on('end', function() {
+					resolve(data);
+				})
+			});
+		}
 	});
 };
 
@@ -34,14 +50,8 @@ function requestHandler(request, response) {
 		return;
 	}
 
-	console.log(requestedUrl);
-
 	getData(requestedUrl).done(function(res) {
 		response.writeHead(200);
-		console.log('Proxy get request success');
-
-		console.log(res);
-
 		response.write(res);
 		response.end();
 	});

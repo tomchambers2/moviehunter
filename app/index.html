@@ -2,44 +2,38 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>MovieHunter</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
     <!-- bower:css -->
     <link rel="stylesheet" href="bower_components/foundation/css/foundation.css" />
+    <link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/spinner.css">
     <!-- endbuild -->
+    <link href='http://fonts.googleapis.com/css?family=Francois+One|Roboto' rel='stylesheet' type='text/css'>
   </head>
-  <body ng-app="cinemaApp">
+  <body ng-app="cinemaApp"> 
     <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
     <!-- Add your site or application content here -->
-    <div class="container">
-      <div class="header">
-        <ul class="nav nav-pills pull-right">
-          <li class="active"><a ng-href="#">Home</a></li>
-          <li><a ng-href="#/about">About</a></li>
-          <li><a ng-href="#">Contact</a></li>
+      <nav class="top-bar" data-topbar>
+        <ul class="title-area">
+            <a href="#/"><img src="/images/logo.png" alt="Moviehunter logo" class="logo"></a>
         </ul>
-        <h3 class="text-muted">cinema</h3>
-      </div>
 
-      <div ng-view=""></div>
+      </nav>
 
-      <div class="footer">
-        <p><span class="glyphicon glyphicon-heart"></span> from the Yeoman team</p>
-      </div>
-    </div>
+    <div class="view" ng-view=""></div>
 
-
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID >
      <script>
        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -48,7 +42,7 @@
 
        ga('create', 'UA-XXXXX-X');
        ga('send', 'pageview');
-    </script>
+    </script> -->
 
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
@@ -57,6 +51,7 @@
     <![endif]-->
     <!-- endbuild -->
 
+    <script src="//maps.googleapis.com/maps/api/js?libraries=places,directions,geometry"></script>
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/modernizr/modernizr.js"></script>
@@ -73,14 +68,37 @@
     <script src="bower_components/jquery.cookie/jquery.cookie.js"></script>
     <script src="bower_components/jquery-placeholder/jquery.placeholder.js"></script>
     <script src="bower_components/foundation/js/foundation.js"></script>
+    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
+    <script src="bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
+    <script src="bower_components/ngstorage/ngStorage.js"></script>
+    <script src="bower_components/ngFitText/ng-FitText.js"></script>
+    <script src="bower_components/angular-youtube-mb/src/angular-youtube-embed.js"></script>
+    <script src="bower_components/angular-local-storage/angular-local-storage.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <script src="bower_components/angular-moment/angular-moment.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/main.js"></script>
-        <script src="scripts/controllers/about.js"></script>
         <script src="scripts/services/getdetails.js"></script>
+        <script src="scripts/controllers/video.js"></script>
+        <script src="scripts/services/dataservice.js"></script>
+        <script src="scripts/services/postcodevalidator.js"></script>
+        <script src="scripts/directives/youtubeplayer.js"></script>
+        <script src="scripts/controllers/pickcinema.js"></script>
+        <script src="scripts/controllers/choosedate.js"></script>
+        <script src="scripts/controllers/choosetime.js"></script>
+        <script src="scripts/controllers/summary.js"></script>
+        <script src="scripts/directives/ngAutocomplete.js"></script>
+        <script src="scripts/services/geocoder.js"></script>
+        <script src="scripts/controllers/maptest.js"></script>
+        <script src="scripts/services/collatedata.js"></script>
+        <script src="scripts/directives/fading-controls.js"></script>
+        <script src="scripts/filters/trimwords.js"></script>
+        <script src="scripts/filters/splitoncommas.js"></script>
+        <script src="scripts/services/directions.js"></script>
         <!-- endbuild -->
 </body>
 </html>

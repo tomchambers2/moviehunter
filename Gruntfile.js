@@ -1,4 +1,4 @@
-// Generated on 2014-08-13 using generator-angular 0.9.5
+// Generated on 2014-08-14 using generator-angular 0.9.5
 'use strict';
 
 // # Globbing
@@ -20,8 +20,6 @@ module.exports = function (grunt) {
     app: require('./bower.json').appPath || 'app',
     dist: 'dist'
   };
-
-  grunt.loadNpmTasks('grunt-wiredep');
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -47,8 +45,11 @@ module.exports = function (grunt) {
         tasks: ['newer:jshint:test', 'karma']
       },
       compass: {
-        files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}'],
-        tasks: ['compass:server', 'autoprefixer']
+        files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}','bower_components/foundation/scss/{,*/}*.{scss,sass}'],
+        tasks: ['compass:server', 'autoprefixer'],
+        options: {
+          livereload: '<%= connect.options.livereload %>'
+        }
       },
       gruntfile: {
         files: ['Gruntfile.js']
@@ -58,6 +59,7 @@ module.exports = function (grunt) {
           livereload: '<%= connect.options.livereload %>'
         },
         files: [
+          'bower_components/foundation/css/{,*/}*.css',
           '<%= yeoman.app %>/{,*/}*.html',
           '.tmp/styles/{,*/}*.css',
           '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}'
@@ -180,8 +182,8 @@ module.exports = function (grunt) {
     // Compiles Sass to CSS and generates necessary files if requested
     compass: {
       options: {
-        sassDir: '<%= yeoman.app %>/styles',
-        cssDir: '.tmp/styles',
+        sassDir: ['bower_components/foundation/scss','<%= yeoman.app %>/styles'],
+        cssDir: ['bower_components/foundation/css','.tmp/styles'],
         generatedImagesDir: '.tmp/images/generated',
         imagesDir: '<%= yeoman.app %>/images',
         javascriptsDir: '<%= yeoman.app %>/scripts',

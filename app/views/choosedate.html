@@ -1,0 +1,26 @@
+<div class="row choose-date">
+	<div class="small-12 columns text-center">
+		<h1>Choose a day to see</h1>
+
+		<h2>
+			<small></small> <strong>{{movieTitle}}</strong><br>
+			<small><a href="#/video/" class="alternative-film-link">Rather see something else?</a></small>
+		</h2>
+
+		<div class="row">
+			<div class="small-12 large-8 columns small-centered date-table">
+				<div class="row medium-text-left date-row">
+					<div class="small-12 medium-6 large-6 columns date-cell" ng-repeat="day in availableDays" ng-click="pickDate({{day}})" ng-class="{first:$index===0||$index===1}">
+						<h3 ng-if="$index === 0 || $index === 1">{{day | amCalendar | trimWords }}</h3>
+						<h3 am-time-ago="{{day}}" ng-if="$index != 0 && $index != 1"></h3>
+						<h4>{{day | amDateFormat:'dddd Do MMMM'}}</h4>
+						Playing at: 
+						<ul>
+							<li ng-repeat="cinema in cinemas">{{cinema.info[0] | splitOnCommas}}</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
