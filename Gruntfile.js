@@ -33,7 +33,7 @@ module.exports = function (grunt) {
         message: 'Built %sourcename% from commit $sourceCommit% on branch %sourceBranch'
       },
       pages: {
-        remote: 'git@github.com:tomchambers2/cinema.git',
+        remote: 'git@github.com:tomchambers2/moviehunter.git',
         branch: 'gh-pages'
       },
       local: {
@@ -451,9 +451,12 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin',
-    'buildcontrol'
+    'htmlmin'
   ]);
+
+  /*grunt.registerTask('buildcontrol', [
+    'buildcontrol'
+    ]);*/
 
   grunt.registerTask('default', [
     'newer:jshint',
