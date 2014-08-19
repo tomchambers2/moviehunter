@@ -12,22 +12,12 @@ angular.module('cinemaApp')
     //I bet there's a way to do all this checking in app.js...
     var postcode = tempData.getData('postcode');
     var latlong = tempData.getData('latlong');
-    if(!postcode) {
-      postcode = 'SE163TL'
-      //$location.path('/');
-    }
-    if (!latlong) {
-      latlong = {lat: 51.4950769, lng: -0.07105039999999008};
-    }
     var movieChoice = choices.getData('movie');
     if (!movieChoice) {
       $location.path('/');
-    };
+    }
     var dateChoice = choices.getData('date');
     $scope.dateChoice = dateChoice;
-    if (!dateChoice) {
-      $location.path('/choosedate');
-    }
 
     $scope.drawPolyline = function(cinemaIndex) {
         $scope.polylines = 
@@ -40,12 +30,12 @@ angular.module('cinemaApp')
                 }
             }
         ];
-    }
+    };
 
     $scope.nextStep = function(index) {
       choices.saveChoice('cinema',index);
-      $location.path('/summary');
-    }
+      $location.path('/choosetime');
+    };
 
     Geocoder.latLngForAddress(postcode).then(function(response) {
       console.log(response);
@@ -83,14 +73,14 @@ angular.module('cinemaApp')
         latitude: collatedCinemas[j].coords.lat,
         longitude: collatedCinemas[j].coords.lng,
         icon: '/images/cinema_icons/cinema.png'
-      }
+      };
       $scope.cinemaMarkers.push(map_coords);
-    };
+    }
 
     $q.all(promises).then(function(response) {
       for (var k = 0;k<collatedCinemas.length;k+=1) {
         collatedCinemas[k].polyline = response[k].routes[0].overview_polyline;
-      };
+      }
       }, function(response) {
         throw new Error(response);
       });
@@ -105,12 +95,12 @@ angular.module('cinemaApp')
         zoom: 12
       };
 
-    var home_marker = {
+    var homeMarker = {
       id: 300,
       latitude: latlong.lat,
       longitude: latlong.lng
-    }
-    $scope.cinemaMarkers.push(home_marker);
+    };
+    $scope.cinemaMarkers.push(homeMarker);
 
 
   });

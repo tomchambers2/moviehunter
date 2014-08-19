@@ -10,21 +10,21 @@ angular.module('cinemaApp')
   .directive('fadingControls', function ($timeout) {
     return {
       restrict: 'A',
-      link: function postLink(scope, element, attrs) {
+      link: function postLink(scope, element) {
       	var timeouts = [];
       	scope.$on('loaded', function() {
           for (var i = 0; i < timeouts.length; i += 1) {
-            $timeout.cancel(timeouts[i])
+            $timeout.cancel(timeouts[i]);
             timeouts.shift();
           }
 	      	$timeout(function() {
-	      		element.addClass('hidden')
+	      		element.addClass('hidden');
 	      	},3000);
       	});
       	
         element.bind('mouseover', function() {
         	for (var i = 0; i < timeouts.length; i += 1) {
-        		$timeout.cancel(timeouts[i])
+        		$timeout.cancel(timeouts[i]);
         		timeouts.shift();
         	}
         	element.removeClass('hidden');
@@ -32,7 +32,7 @@ angular.module('cinemaApp')
       			element.addClass('hidden');
       		},4500);
         	timeouts.push(timeout);
-        })
+        });
       }
     };
   });

@@ -10,14 +10,14 @@ angular.module('cinemaApp')
 
     var collateMovieData = function(cinemas, postcode) {
       movies.startedBuilding = true;
-      console.log("Loading movie data in the background");
+      console.log('Loading movie data in the background');
       
       var promises = [];
       for (var i = 0;i < cinemas.length; i+=1) {
         var movie_data = 'http://moviesapi.herokuapp.com/cinemas/'+cinemas[i].venue_id+'/showings';
         var promise = Proxy.get(movie_data);
         promises.push(promise);
-      };
+      }
 
       $q.all(promises).then(function(result) {
         for (var j = 0; j < result.length; j += 1) { //iterate through promises, which is an array of cinemas
@@ -60,19 +60,19 @@ angular.module('cinemaApp')
       }).then(function() {
         movies.collated = true;
         localStorageService.add('movies'+postcode, movies);
-      })
+      });
     };
 
     return {
       createMovieList: collateMovieData,
       getMovieList: function(postcode) {
           if (localStorageService.get('movies'+postcode)) {
-            console.log("Getting cached data instead. update this to check for staleness");
+            console.log('Getting cached data instead. update this to check for staleness');
             return localStorageService.get('movies'+postcode);
           } else {
             return movies;
           }
       }
-    }
+    };
 
   });

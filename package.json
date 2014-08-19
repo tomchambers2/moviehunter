@@ -1,6 +1,6 @@
 {
-  "name": "cinema",
-  "version": "0.0.0",
+  "name": "moviehunter",
+  "version": "0.1.0",
   "dependencies": {},
   "devDependencies": {
     "grunt": "^0.4.1",
@@ -33,5 +33,19 @@
   },
   "scripts": {
     "test": "grunt test"
-  }
+  },
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tomchambers2/moviehunter.git"
+  },
+  "author": "Tom Chambers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomchambers2/moviehunter/issues"
+  },
+  "homepage": "https://github.com/tomchambers2/moviehunter"
 }

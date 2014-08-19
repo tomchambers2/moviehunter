@@ -1,8 +1,9 @@
 'use strict';
 
 angular.module('cinemaApp')
-  .controller('MainCtrl', function ($scope, $location, $q, $timeout, Proxy, Geocoder, tempData, localStorageService, collatedata, choices) {
+  .controller('MainCtrl', function ($scope, $location, $q, $timeout, Proxy, Geocoder, tempData, localStorageService, collatedata) {
     $scope.loading = 0;
+    $scope.searching = 0;
 
     var getLocation = function() {
       if (navigator.geolocation) {
@@ -13,6 +14,7 @@ angular.module('cinemaApp')
     };
 
     var showPosition = function(pos) {
+      $scope.searching=1;
       var latitude = pos.coords.latitude;
       var longitude = pos.coords.longitude;
       $scope.showSearchResults(latitude, longitude);
@@ -22,7 +24,7 @@ angular.module('cinemaApp')
       console.log('Geolocation failed or permission was denied');
     };
 
-    var setMap = function(latitude, longitude, marker) {
+    var setMap = function(latitude, longitude) {
       console.log('will set map to ',latitude,' ',longitude);
       latitude = latitude ? latitude : 51.5000;
       longitude = longitude ? longitude : 0.1167;
@@ -46,22 +48,29 @@ angular.module('cinemaApp')
           zIndex: 1000
         },
         events: {
-          dragend: function (marker, eventName, args) {
-            coordsIntoPostcode(marker.getPosition().lat(),marker.getPosition().lng())
+          dragend: function (marker) {
+            coordsIntoPostcode(marker.getPosition().lat(),marker.getPosition().lng());
           }
         }
-      }
+      };
 
     };
     $scope.cinemaMarkers = [];
+
+    var stopSearching = function() {
+      $scope.$broadcast('error','We couldn\'t find that address, sorry!');
+      $scope.searching=0;
+    };
 
     var coordsIntoPostcode = function(latitude,longitude) {
       var deferred = $q.defer();
       var url = 'http://uk-postcodes.com/latlng/'+latitude+','+longitude+'.json';
       Proxy.get(url).then(function (data) {
         if (!data.postcode) {
-          throw new Error("Postcode API returned blank");
+          stopSearching();
+          $scope.loading=0;
           deferred.reject();
+          throw new Error('Postcode API returned blank');
         } else {
           $scope.loading=1;
           var postcode = data.postcode;
@@ -79,12 +88,12 @@ angular.module('cinemaApp')
     $scope.showSearchResults = function(latitude,longitude) {
       console.log('Taking lat long, turning into postcode, then collating and plotting results');
       coordsIntoPostcode(latitude,longitude).then(function(postcode) {
-        console.log("We got a thing back");
         setMap(latitude,longitude);
         $scope.loading = 1;
+        $scope.searching = 0;
 
         if (localStorageService.get('cinemaList'+postcode)) {
-          console.log("We already have a cinema list saved, cancelling creation",localStorageService.get('cinemaList'+postcode));
+          console.log('We already have a cinema list saved, cancelling creation',localStorageService.get('cinemaList'+postcode));
           var cinemaList = localStorageService.get('cinemaList'+postcode);
           for (var a = 0;a<cinemaList.length;a+=1) {
             var map_coords = {
@@ -94,11 +103,11 @@ angular.module('cinemaApp')
               latitude: cinemaList[a].coords.lat,
               longitude: cinemaList[a].coords.lng,
               icon: '/images/cinema_icons/cinema.png'
-            }
+            };
             $scope.cinemaMarkers.push(map_coords);
-          };
+          }
           if (!collatedata.getMovieList(postcode)) {
-            console.log("Movie list does not exist. Will create it now with cached cinema list");
+            console.log('Movie list does not exist. Will create it now with cached cinema list');
             collatedata.createMovieList(localStorageService.get('cinemaList'+postcode), postcode);
           }
           $scope.loading = 2;
@@ -112,13 +121,13 @@ angular.module('cinemaApp')
           var promises = [];
           for (var i = 0;i<result.length;i+=1) {
             promises.push(Geocoder.latLngForAddress(result[i].address));
-          };
+          }
           $q.all(promises).then(function(coords) {
               console.log('got geocoders back');
               for (var j = 0;j<coords.length;j+=1) {
                 console.log('went round loop');
-                var shortName = /(Showcase|Odeon|Cineworld|Reel)/.exec(result[j].title);
-                var icon = shortName ? shortName[0] : 'cinema';
+                //var shortName = /(Showcase|Odeon|Cineworld|Reel)/.exec(result[j].title);
+                //var icon = shortName ? shortName[0] : 'cinema';
                 var map_coords = {
                   id: j,
                   title: result[j].title,
@@ -126,27 +135,28 @@ angular.module('cinemaApp')
                   latitude: coords[j].lat,
                   longitude: coords[j].lng,
                   icon: '/images/cinema_icons/cinema.png'
-                }
+                };
                 $scope.cinemaMarkers.push(map_coords);
-                var cinemaList = result;
+                cinemaList = result;
                 cinemaList[j].coords = coords[j];
-              };
+              }
               localStorageService.add('cinemaList'+postcode,cinemaList);
               $scope.loading = 2; //when all is done, let the user click next. stop loading. only when all has returned!
           });
           collatedata.createMovieList(result, postcode);
         });
       }, function() {
-        console.log("We got an error with the psotcode");
+        console.log('We got an error with the psotcode');
       });
-    }
+    };
 
     $scope.validateAddress = function() {
+      $scope.searching = 1;
       Geocoder.latLngForAddress($scope.address).then(function(coords) {
           $scope.showSearchResults(coords.lat,coords.lng);
       }, function() {
           $scope.loading=0;
-      })
+      });
     };
 
     //initialize - either get location automatically and load results, or wait for model change/button press

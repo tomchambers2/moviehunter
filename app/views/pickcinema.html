@@ -14,7 +14,7 @@
 				</google-map>
 			</div>
 			<div class="small-4 columns cinemas">
-				<section class="cinema-info" ng-repeat="cinema in collatedCinemas | orderBy:cinema.distance" ng-click="drawPolyline($index);nextStep($index)">
+				<section class="cinema-info" hover-polyline ng-repeat="cinema in collatedCinemas | orderBy:cinema.distance" ng-mouseenter="drawPolyline($index)" ng-click="nextStep($index)">
 					<h2>{{cinema.title | splitOnCommas}}</h2>
 					<p>{{cinema.address}}</p>
 					<p>{{cinema.distance}} away</p>

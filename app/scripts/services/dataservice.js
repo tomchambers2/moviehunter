@@ -36,5 +36,5 @@ angular.module('cinemaApp')
           return choices[index];
         }
       }
-    }
-  })
+    };
+  });

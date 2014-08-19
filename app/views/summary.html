@@ -1,22 +1,25 @@
-<div class="row">
+<div class="row summary">
 	<div class="small-12 columns text-center">
-		<h1>Summary of your choices</h1>
-		<h2>The Expendables</h2>
-		<h2>at Darley Movie Multiplex</h2>
-		<h2>on Tuesday 19th (tomorrow) at 3:30pm</h2>
+		<h1>You're going to see...</h1>
+		<h2>{{movieTitle}}</h2>
+		<h3><small>at</small> {{cinema.title | splitOnCommas}} <small>on</small> {{timeChoice}}, {{dateChoice | amDateFormat:'dddd Do MMMM'}}</h3>
 
-		<div class="row">
+		<div class="row sharing-row">
 			<div class="small-4 columns">
-				<div class="button">Share on fb</div>
+				<a href="https://plus.google.com/share?url=http://www.moviehunter.co.uk"><div class="button gplus">Share on Google+</div></a>
 			</div>
 			<div class="small-4 columns">
-				<div class="button">Share on twitter</div>
+				<a ng-href="https://twitter.com/share?url=moviehunter.co.uk&amp;text=Seeing {{movieTitle}} at {{timeChoice}} {{dateChoice | amDateFormat:'Do'}} at {{cinema.title | splitOnCommas}}. Found at moviehunter.co.uk"><div class="button twitter">Tweet</div></a>
 			</div>
 			<div class="small-4 columns">
-				<div class="button">Email</div>
+				<a ng-href="mailto:?subject=I'm going to see {{movieTitle}}, want to come?&amp;body=I'm seeing {{movieTitle}} at {{timeChoice}} {{timeChoice}}, {{dateChoice | amDateFormat:'dddd Do MMMM'}} at {{cinema.title | splitOnCommas}}. I got the times at http://moviehunter.co.uk"><div class="button email">Email</div></a>
 			</div>
 		</div>
-
-		<a href="#/"><div class="button">Start again</div></a>
+		<div class="sharing-row row">
+			<div class="small-4 columns small-centered text-center">
+				<a href="#/"><div class="button">Start again</div></a>
+			</div>
+		</div>
 	</div>
+
 </div>

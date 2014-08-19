@@ -16,7 +16,7 @@ angular.module('cinemaApp')
   	var movieChoice = choices.getData('movie');
   	if (!movieChoice) {
   		$location.path('/');
-  	};
+  	}
 
     var movieList = collatedata.getMovieList(postcode).list;
     var movie = movieList[movieChoice];

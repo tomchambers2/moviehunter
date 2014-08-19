@@ -11,14 +11,14 @@ angular.module('cinemaApp')
       showinfo: 0,
       controls: 0,
       iv_load_policy: 3,
-    }
+    };
 
     var resetSummary = function() {
       $scope.movie.synopsis = 'Loading synopsis';
       $scope.movie.imdb = ' --';
       $scope.movie.rottenTomatoes = ' --';
       $scope.movie.runtime = '---';
-    }
+    };
     resetSummary();
 
     var watchedFilms = [];
@@ -41,7 +41,7 @@ angular.module('cinemaApp')
           return candidate;
         }
       }
-    }
+    };
 
     var showFilm = function() {
       var movie = getRandomFilm(collatedata.getMovieList(postcode).list);
@@ -51,14 +51,14 @@ angular.module('cinemaApp')
       getYoutubeData(movie.title);
       getImdbDetails(movie.title);
       getRtDetails(movie.title);
-    }
+    };
 
     $scope.showFilm = showFilm;
 
     var setLoadedTrue = function() {
       $scope.loaded = true;
       $scope.$broadcast('loaded');
-    }
+    };
 
     var getYoutubeData = function(title) {
       var pattern = /[a-zA-Z0-9'\-:& ]+/;
@@ -97,14 +97,14 @@ angular.module('cinemaApp')
       Proxy.get(imdbData + imdbDataPath).then(function (result) {
         var imdb = {};
         imdb.rating = result.imdbRating;
-        if (!result.imdbRating) { imdb.rating = ' --' } else { imdb.rating = (result.imdbRating === 'N/A' || '') ? ' --' : result.imdbRating; }
+        if (!result.imdbRating) { imdb.rating = ' --' } else { imdb.rating = (result.imdbRating === 'N/A' || '') ? ' --' : result.imdbRating; };
         imdb.actors = result.Actors;
         imdb.genre = result.Genre;
         imdb.imdbId = result.imdbID;
         imdb.synopsis = result.Plot === 'N/A' || '' ? 'No summary available' : result.Plot; 
         $scope.movie.imdb = imdb;
         //return imdb;
-      })
+      });
     };
 
     $scope.$on('youtube.player.paused', function() {
@@ -122,7 +122,7 @@ angular.module('cinemaApp')
         $scope.videoPaused=true;
         $youtube.player.pauseVideo();
       }
-    }
+    };
 
     //get postcode -> check if first result in -> check if started at all -> if not kick back to home
     var postcode = tempData.getData('postcode');
@@ -131,9 +131,9 @@ angular.module('cinemaApp')
     }
     if (!collatedata.getMovieList(postcode).partiallyBuilt) {
       if (!collatedata.getMovieList(postcode).startedBuilding) {
-        $location.path('/')
+        $location.path('/');
       }
-      $scope.$on('firstFilmStored', function(event, args) {
+      $scope.$on('firstFilmStored', function() {
         showFilm();
       });
     } else {

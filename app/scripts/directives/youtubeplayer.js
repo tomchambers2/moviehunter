@@ -12,7 +12,7 @@ angular.module('cinemaApp')
 		templateUrl: '/views/youtubeplayer.html',
 		replace: true,
 		restrict: 'E',
-		link: function postLink(scope,element) {
+		link: function postLink(scope) {
 			scope.$watch('yId', function(newVal) {
 				if (newVal) {
 					scope.url = $sce.trustAsResourceUrl('http://www.youtube.com/embed/'+newVal+'?autoplay=1&showinfo=0&controls=0&iv_load_policy=3&enablejsapi=1');
@@ -21,11 +21,11 @@ angular.module('cinemaApp')
 			scope.$on('play', function() {
 				console.log('will play');
 				document.getElementById('ytplayer').playVideo();
-			})
+			});
 			scope.$on('pause', function() {
 				console.log('will pause');
 				document.getElementById('ytplayer').pauseVideo();
-			})
+			});
 		}
     };
   });
