@@ -35,12 +35,6 @@ module.exports = function (grunt) {
       pages: {
         remote: 'git@github.com:tomchambers2/moviehunter.git',
         branch: 'gh-pages'
-      },
-      local: {
-        options: {
-          remote: '../',
-          branch: 'build'
-        }
       }
     },
     // Project settings
