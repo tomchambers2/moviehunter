@@ -21,9 +21,28 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
+  grunt.loadNpmTasks('grunt-build-control');
+
   // Define the configuration for all the tasks
   grunt.initConfig({
-
+    buildcontrol: {
+      options: {
+        dir: 'dist',
+        commit: true,
+        push: true,
+        message: 'Built %sourcename% from commit $sourceCommit% on branch %sourceBranch'
+      },
+      pages: {
+        remote: 'git@github.com:tomchambers2/cinema.git',
+        branch: 'gh-pages'
+      },
+      local: {
+        options: {
+          remote: '../',
+          branch: 'build'
+        }
+      }
+    },
     // Project settings
     yeoman: appConfig,
 
@@ -390,7 +409,6 @@ module.exports = function (grunt) {
     }
   });
 
-
   grunt.registerTask('serve', 'Compile then start a connect web server', function (target) {
     if (target === 'dist') {
       return grunt.task.run(['build', 'connect:dist:keepalive']);
@@ -433,7 +451,8 @@ module.exports = function (grunt) {
     'uglify',
     'filerev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'buildcontrol'
   ]);
 
   grunt.registerTask('default', [
