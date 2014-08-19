@@ -21,21 +21,15 @@ module.exports = function (grunt) {
     dist: 'dist'
   };
 
-  grunt.loadNpmTasks('grunt-build-control');
+  grunt.loadNpmTasks('grunt-gh-pages');
 
   // Define the configuration for all the tasks
   grunt.initConfig({
-    buildcontrol: {
+    'gh-pages': {
       options: {
-        dir: 'dist',
-        commit: true,
-        push: true,
-        message: 'Built %sourcename% from commit $sourceCommit% on branch %sourceBranch'
+        base: 'dist'
       },
-      pages: {
-        remote: 'git@github.com:tomchambers2/moviehunter.git',
-        branch: 'gh-pages'
-      }
+      src: ['**']
     },
     // Project settings
     yeoman: appConfig,

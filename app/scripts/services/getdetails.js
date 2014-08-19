@@ -10,7 +10,8 @@
 angular.module('cinemaApp')
   .service('Proxy', function Getdetails($http) {
   	this.get = function(url) {
-	    var promise = $http.get('http://localhost:8080?url='+url).then(function (response) {
+  		var base = 'http://warm-cliffs-7633.herokuapp.com/?url='
+	    var promise = $http.get(base+url).then(function (response) {
 	    	return response.data;
 	    });
 	    return promise;
