@@ -10,7 +10,7 @@ $banner-height: 120px;
 
 body {
   font-family: $secondary-font;
-  background-image: url(./images/dirty_old_shirt.png);
+  background-image: url(../images/dirty_old_shirt.png);
 }
 
 .top-bar {
@@ -31,7 +31,7 @@ body {
   z-index: 1000;
 }
 .banner {
-  background-image: url(./images/banner.png);
+  background-image: url(../images/banner.png);
   width: 100%;
   height: 120px;
 }
@@ -49,7 +49,7 @@ body {
 }
 .search-with-background {
   background-color: $footer-color;
-  background-image: url(./images/dirty_old_shirt.png);
+  background-image: url(../images/dirty_old_shirt.png);
 }
 
 /* used site wide */
@@ -125,7 +125,7 @@ label {
 .form .search-box {
   height: 100px;
   padding: 0px;
-  background: url(./images/texturetastic_gray.png);
+  background: url(../images/texturetastic_gray.png);
 }
 .form .button {
   width: 100%;
@@ -138,7 +138,7 @@ label {
 .form .search-button {
   width: 100%;
   height: 100%;
-  background: rgba(0,100,0,0.6) url(./images/mg.png) no-repeat;
+  background: rgba(0,100,0,0.6) url(../images/mg.png) no-repeat;
   background-size: auto 80px;
   background-position: center;
 }
@@ -176,7 +176,7 @@ label {
     height: 70px;
   }
   .form .search-button {
-    background-image: url(./images/mg.png) no-repeat;
+    background-image: url(../images/mg.png) no-repeat;
     background-size: auto 50px;
   }
   .form .searching-button {
@@ -312,7 +312,7 @@ label {
   background-color: rgba(80,80,80,0.5);
 }
 .button.showtimes-button {
-  background: url(./images/showtimes.png) no-repeat;
+  background: url(../images/showtimes.png) no-repeat;
   box-shadow: 0px 0px 3px #aaa;
   width: 202px;
   height: 75px;
@@ -328,7 +328,7 @@ label {
 /* choose date */
 .choose-date {
   color: #fff;
-  background-image: url(./images/dirty_old_shirt.png);
+  background-image: url(../images/dirty_old_shirt.png);
 }
 .choose-date h1 {
   font-size: 26px;
@@ -395,7 +395,7 @@ a.alternative-film-link:hover {
 
 /* pick cinema page */
 .pick-cinema {
-  background-image: url(./images/dirty_old_shirt.png);
+  background-image: url(../images/dirty_old_shirt.png);
   color: #fff;
 }
 .pick-cinema h1 {
@@ -432,7 +432,7 @@ section.cinema-info h2 {
 
 /* choose time */
 .choose-time {
-  background-image: url(./images/dirty_old_shirt.png);
+  background-image: url(../images/dirty_old_shirt.png);
   color: #fff;
 }
 .choose-time h1 {

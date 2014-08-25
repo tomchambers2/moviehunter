@@ -66,7 +66,8 @@ angular.module('cinemaApp')
       var youtubeUrl = 'https://www.googleapis.com/youtube/v3/';
       var path = encodeURIComponent('search?part=id%2Csnippet&q='+title+'%20movie%20trailer&key=AIzaSyBSLdvbrkkvY7Ft9ZYhgUqoSoBlak2A9HY');
       var wholeyoutubeUrl = youtubeUrl + path;
-      Proxy.get(wholeyoutubeUrl).then(function(result) {   
+      Proxy.get(wholeyoutubeUrl).then(function(result) {
+        console.log(result); 
         $scope.yId = result.items[0].id.videoId;
         setLoadedTrue();
       });
