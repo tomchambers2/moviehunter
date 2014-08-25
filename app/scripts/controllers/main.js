@@ -102,7 +102,7 @@ angular.module('cinemaApp')
               clickable: false,
               latitude: cinemaList[a].coords.lat,
               longitude: cinemaList[a].coords.lng,
-              icon: '/images/cinema_icons/cinema.png'
+              icon: './images/cinema_icons/cinema.png'
             };
             $scope.cinemaMarkers.push(map_coords);
           }
