@@ -5,7 +5,11 @@ angular.module('cinemaApp')
     $scope.loading = 0;
     $scope.searching = 0;
 
-    var getLocation = function() {
+    if (navigator.geolocation) {
+      $scope.geolocationFeature = true;
+    }
+
+    $scope.getLocation = function() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(showPosition, showError);
       } else {
@@ -158,19 +162,4 @@ angular.module('cinemaApp')
           $scope.loading=0;
       });
     };
-
-    //initialize - either get location automatically and load results, or wait for model change/button press
-    getLocation(); //if we can get the location automatically, we'll just go straight there
-
-    $scope.$watch('address', function(tmpStr) {
-      $timeout(function() {
-        if (!tmpStr || tmpStr.length === 0) {
-          $scope.loading=0;
-          return 0;
-        }
-        if (tmpStr === $scope.address) {
-          $scope.validateAddress();
-        }
-      },800);
-    });
   });

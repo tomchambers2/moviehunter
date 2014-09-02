@@ -35,6 +35,11 @@
 
 				</form>
 			</div>
+			<div class="row" ng-if="geolocationFeature">
+				<div class="columns small-12 medium-5 small-centered">
+					<div class="button get-location" ng-click="getLocation()"><i class="fa fa-location-arrow"></i> try locating me instead</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<error-message></error-message>

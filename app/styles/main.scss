@@ -158,6 +158,11 @@ label {
   font-size: 35px;
   line-height: 67px
 }
+.button.get-location {
+  font-size: 30px;
+  line-height: 30px;
+  margin-top: 40px;
+}
 
 .form .search-button[disabled=disabled],.form .search-button[disabled=disabled]:hover {
   background-color: rgba(0,30,0,0.4);
