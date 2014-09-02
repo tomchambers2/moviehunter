@@ -44,6 +44,7 @@ angular.module('cinemaApp')
     };
 
     var showFilm = function() {
+      console.log('should get film')
       var movie = getRandomFilm(collatedata.getMovieList(postcode).list);
       $scope.movie.movieTitle = movie.title;
       resetSummary();
@@ -134,10 +135,13 @@ angular.module('cinemaApp')
       if (!collatedata.getMovieList(postcode).startedBuilding) {
         $location.path('/');
       }
+      console.log('apparently still building')
+      console.log(postcode, collatedata.getMovieList(postcode))
       $scope.$on('firstFilmStored', function() {
         showFilm();
       });
     } else {
+      console.log('have cached')
       showFilm();
     }
   });

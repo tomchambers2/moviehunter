@@ -40,7 +40,6 @@ body {
 }
 
 .view {
-  //background-color: #000;
   height: calc(100% - 120px);
 }
 .viewport-bound {
@@ -117,7 +116,6 @@ label {
   height: 100%;
   font-family: 'Francois One', sans-serif;
   padding: 15px;
-  border: none;
 }
 .form .input-box {
   height: 100px;
@@ -373,11 +371,14 @@ a.alternative-film-link:hover {
   padding-top: 50px;
   padding-bottom: 50px;
   font-family: $secondary-font;
+  display: table;
 }
 .choose-date .date-row {
   height: 100%;
+  display: table-row;
 }
 .choose-date .date-cell {
+  display: table-cell;
   padding: 15px;
   padding-left: 45px;
   padding-top: 30px;
@@ -490,6 +491,8 @@ section.cinema-info h2 {
 }
 .button.gplus {
   background-color: #DD4B39;
+  padding-left: 0;
+  padding-right: 0;
 }
 .button.twitter {
   background: #00ABF0;

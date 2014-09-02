@@ -6,13 +6,13 @@
 
 		<div class="row sharing-row">
 			<div class="small-4 columns">
-				<a href="https://plus.google.com/share?url=http://www.moviehunter.co.uk"><div class="button gplus">Share on Google+</div></a>
+				<a href="https://plus.google.com/share?url=http://www.moviehunter.co.uk" target="_blank"><div class="button gplus"><i class="fa-google fa"></i> Share on Google+</div></a>
 			</div>
 			<div class="small-4 columns">
-				<a ng-href="https://twitter.com/share?url=moviehunter.co.uk&amp;text=Seeing {{movieTitle}} at {{timeChoice}} {{dateChoice | amDateFormat:'Do'}} at {{cinema.title | splitOnCommas}}. Found at moviehunter.co.uk"><div class="button twitter">Tweet</div></a>
+				<a ng-href="https://twitter.com/share?url=moviehunter.co.uk&amp;text=Seeing {{movieTitle}} at {{timeChoice}} {{dateChoice | amDateFormat:'Do'}} at {{cinema.title | splitOnCommas}}. Found at moviehunter.co.uk" target="_blank"><div class="button twitter"><i class="fa fa-twitter"></i> Tweet</div></a>
 			</div>
 			<div class="small-4 columns">
-				<a ng-href="mailto:?subject=I'm going to see {{movieTitle}}, want to come?&amp;body=I'm seeing {{movieTitle}} at {{timeChoice}} {{timeChoice}}, {{dateChoice | amDateFormat:'dddd Do MMMM'}} at {{cinema.title | splitOnCommas}}. I got the times at http://moviehunter.co.uk"><div class="button email">Email</div></a>
+				<a ng-href="mailto:?subject=I'm going to see {{movieTitle}}, want to come?&amp;body=I'm seeing {{movieTitle}} at {{timeChoice}}, {{dateChoice | amDateFormat:'dddd Do MMMM'}} at {{cinema.title | splitOnCommas}}. I got the times at http://moviehunter.co.uk"><div class="button email" target="_blank"><i class="fa fa-envelope-o"></i> Email</div></a>
 			</div>
 		</div>
 		<div class="sharing-row row">

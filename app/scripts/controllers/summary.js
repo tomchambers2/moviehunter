@@ -9,7 +9,10 @@
  */
 angular.module('cinemaApp')
   .controller('SummaryCtrl', function ($scope, tempData, choices, collatedata, localStorageService) {
-    var postcode = tempData.getData('postcode');
+    var postcode = choices.getData('postcode');
+    if (!postcode) {
+        $location.path('/');
+    }
     var movieChoice = choices.getData('movie');
     var dateChoice = choices.getData('date');
     $scope.dateChoice = dateChoice;
@@ -18,7 +21,6 @@ angular.module('cinemaApp')
     var cinemaChoice = choices.getData('cinema');
 
     var cinemaList = localStorageService.get('cinemaList'+postcode);
-
 
     var collatedCinemas = [];
     var movieList = collatedata.getMovieList(postcode).list;

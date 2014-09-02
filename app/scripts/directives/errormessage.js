@@ -16,7 +16,6 @@ angular.module('cinemaApp')
         
         scope.$on('error',function(message) {
         	element.removeClass('hidden');
-        	console.log(message);
         	element.text('Sorry, we couldn\'t find that address');
         	$timeout(function() {
         		element.addClass('hidden');

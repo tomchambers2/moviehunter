@@ -23,6 +23,7 @@ angular.module('cinemaApp')
         for (var j = 0; j < result.length; j += 1) { //iterate through promises, which is an array of cinemas
           var currentCinema = cinemas[j];
           var cinemaResult = result[j];
+          console.log("j:",j,currentCinema);
 
           for (var k = 0; k < cinemaResult.length; k += 1) { //iterate through the films, repeated for each cinema
             var currentMovie = cinemaResult[k];
@@ -48,11 +49,14 @@ angular.module('cinemaApp')
               ];
               movies.list[currentMovie.link].cinemas[currentCinema.venue_id].info = info; //title, distance, address, link, venueid
               movies.list[currentMovie.link].cinemas[currentCinema.venue_id].times = currentMovie.time;
+              console.log(currentMovie.title);
               movies.list[currentMovie.link].title = currentMovie.title.match(pattern)[0];
               movies.list[currentMovie.link].link = currentMovie.link;
             }
-            if (j===0 && k===0) {
+            console.log('iteration of movie. j and k are ',j,k)
+            if (movies.partiallyBuilt === false) {
               $rootScope.$broadcast('firstFilmStored');
+              console.log('setting partiallyBuilt to true!!!')
               movies.partiallyBuilt = true;
             }
           }          
