@@ -61,10 +61,12 @@ angular
  .config(['localStorageServiceProvider', function(localStorageServiceProvider) {
   localStorageServiceProvider.setPrefix('ls');
  }])
-  .config( function($provide) {
+  .config(['$provide', function($provide) {
+    //https://gist.github.com/JGarrido/8100714 - should be updated if refactoring
+    //http://stackoverflow.com/questions/25630994/make-q-all-fail-silently-when-one-promise-is-rejected/25637431
     $provide.decorator("$q", ["$delegate", function($delegate) {
       var $q = $delegate;
-
+    
       $q.allComplete = function(promises) {
 
         if(!angular.isArray(promises)) {
@@ -111,4 +113,5 @@ angular
 
       return $q;
     }]);
-  });
+
+  }]);
