@@ -22,7 +22,9 @@ angular
     'ngFitText',
     'youtube-embed',
     'LocalStorageModule',
-    'angularMoment'
+    'angularMoment',
+    'angulartics',
+    'angulartics.segment.io'
   ])
   .config(function ($routeProvider) {
     $routeProvider
