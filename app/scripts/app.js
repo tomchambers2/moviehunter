@@ -56,6 +56,10 @@ angular
         templateUrl: 'views/maptest.html',
         controller: 'MaptestCtrl'
       })
+      .when('/main-new', {
+        templateUrl: 'views/main-new.html',
+        controller: 'MainNewCtrl'
+      })
       .otherwise({
         redirectTo: '/'
       });

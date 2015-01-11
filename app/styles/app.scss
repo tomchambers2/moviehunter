@@ -1,0 +1,59 @@
+.search {
+	position: absolute;
+	top: 40px;
+	z-index: 5000;
+	right: 60px;
+}
+
+.main {
+	background: #fff;
+}
+
+.fullWidth {
+   width: 100%;
+   margin-left: auto;
+   margin-right: auto;
+   max-width: initial;
+}
+
+.columns {
+	padding: 0;
+}
+
+h2 {
+	font-size: 1.25em;
+	color: #000;
+}
+
+.films {
+	overflow: scroll;
+	position: absolute;
+	height: calc(100% - 120px);	
+	top: 120px;
+}
+
+.film {
+	background: #fff;
+	border: 1px solid;
+	position: relative;
+}
+
+.film-title {
+	margin: 0;
+	padding: 4px;
+}
+
+.film-poster {
+}
+
+.film-details {
+}
+
+.film-details table {
+	width: 100%;
+	margin: 0;
+}
+
+.angular-google-map {
+	height: 100%;
+}

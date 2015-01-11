@@ -205,7 +205,15 @@ label {
 }
 
 
-/* map stuff */
+/* search page & map stuff */
+.sidebar {
+  position: absolute;
+  left: 0;
+  width: 20%;
+  z-index: 10;
+  height: calc(100% - 120px);
+}
+
 .map-container {
   position: absolute;
   height: calc(100% - 120px);

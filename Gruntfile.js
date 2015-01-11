@@ -55,7 +55,7 @@ module.exports = function (grunt) {
         files: ['<%= yeoman.app %>/styles/{,*/}*.{scss,sass}','bower_components/foundation/scss/{,*/}*.{scss,sass}'],
         tasks: ['compass:server', 'autoprefixer'],
         options: {
-          livereload: '<%= connect.options.livereload %>'
+          //livereload: '<%= connect.options.livereload %>'
         }
       },
       gruntfile: {
