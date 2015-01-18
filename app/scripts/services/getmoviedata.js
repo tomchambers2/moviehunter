@@ -9,16 +9,20 @@
  */
 angular.module('cinemaApp')
   .factory('getMovieData', function (Proxy, $q) {
+
     var getYoutubeData = function(title) {
+      var deferred = $q.defer();
+
       var pattern = /[a-zA-Z0-9'\-:& ]+/;
       var title = title.match(pattern)[0];
       var youtubeUrl = 'https://www.googleapis.com/youtube/v3/';
       var path = encodeURIComponent('search?part=id%2Csnippet&q='+title+'%20movie%20trailer&key=AIzaSyBSLdvbrkkvY7Ft9ZYhgUqoSoBlak2A9HY');
       var wholeyoutubeUrl = youtubeUrl + path;
       Proxy.get(wholeyoutubeUrl).then(function(result) {
-         
-        
+        deferred.resolve(result.items[0].id.videoId)
       });
+
+      return deferred.promise;
     };
 
     var info = {};
@@ -72,12 +76,13 @@ angular.module('cinemaApp')
     var getData = function(title) {
     	var deferred = $q.defer();
 
-    	var promises = [getImdbDetails(title),getRtDetails(title)];
+    	var promises = [getImdbDetails(title),getRtDetails(title),getYoutubeData(title)];
 
     	$q.allComplete(promises).then(function(data) {
     		var details = {
     			imdb: data[0],
-    			rt: data[1]
+    			rt: data[1],
+          youtube: data[2]
     		};
     			
     		deferred.resolve(details);

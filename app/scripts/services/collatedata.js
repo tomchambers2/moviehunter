@@ -88,7 +88,7 @@ angular.module('cinemaApp')
               movies.list[currentMovie.link].title = currentMovie.title.match(pattern)[0];
               movies.list[currentMovie.link].link = currentMovie.link;
 
-              applyMovieData(currentMovie.link,currentMovie.title.match(pattern)[0]);
+              applyMovieData(currentMovie.link,currentMovie.title.match(pattern)[0], postcode);
             }
 
             
@@ -105,7 +105,7 @@ angular.module('cinemaApp')
       });
     };
 
-    var applyMovieData = function(link,title) {
+    var applyMovieData = function(link,title,postcode) {
       getMovieData.getData(title).then(function(details) {
         movies.list[link].details = details;
         localStorageService.add('movies'+postcode, movies);

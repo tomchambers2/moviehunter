@@ -30,6 +30,7 @@ h2 {
 	position: absolute;
 	height: calc(100% - 120px);	
 	top: 120px;
+	z-index: 10;
 }
 
 .film {
@@ -54,6 +55,26 @@ h2 {
 	margin: 0;
 }
 
+.trailer {
+	position: absolute;
+	z-index: 100;
+	width: 100%;
+	height: 100%;
+}
+
+.close-trailer {
+	position: absolute;
+	right: 0;
+}
+
+.reset-filter {
+	position: absolute;
+	right: 0;
+	top: 0;
+	z-index: 100;
+}
+
 .angular-google-map {
 	height: 100%;
+	height: 800px;
 }
