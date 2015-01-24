@@ -383,4 +383,9 @@ angular.module('cinemaApp')
     } 
 
     getLocationByIp();
+
+
+    var latitude = latitude ? latitude : 51.5000;
+    var longitude = longitude ? longitude : -0.1167;
+    $scope.showSearchResults(latitude, longitude);
   });
