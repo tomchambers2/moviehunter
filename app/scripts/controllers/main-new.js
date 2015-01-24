@@ -14,6 +14,7 @@ angular.module('cinemaApp')
       map: []
     };
 
+
     $scope.mapEvents = {
       tilesloaded: function (map) {
         $scope.$apply(function () {
@@ -64,6 +65,14 @@ angular.module('cinemaApp')
         },
         zoom: 11       
       };
+
+      $scope.map = {
+        center: {
+          latitude: latitude,
+          longitude: longitude
+        },
+        zoom: 11       
+      };      
 
       $scope.marker = {
         id: 0,
@@ -171,6 +180,7 @@ angular.module('cinemaApp')
     var createCinemaMarkers = function(cinemas) {
       $scope.cinemaMarkers = [];
       $scope.cinemaWindows = [];
+      $scope.cinemaInfo = {};
       for (var i = 0; i < cinemas.length; i++) {
         
         getMoviesForCinema(cinemas[i].venue_id);
@@ -192,6 +202,10 @@ angular.module('cinemaApp')
           cinemas[i].movieTitle = '';
         }
 
+        $scope.cinemaInfo[cinemas[i].venue_id] = {};
+        $scope.cinemaInfo[cinemas[i].venue_id].movieTitle = cinemas[i].movieTitle;
+        $scope.cinemaInfo[cinemas[i].venue_id].movieTimes = cinemas[i].movieTimes;
+
         var parameters = {
             movieTitle: cinemas[i].movieTitle,
             movieTimes: cinemas[i].movieTimes,
@@ -205,7 +219,7 @@ angular.module('cinemaApp')
             longitude: cinemas[i].coords.lng
           },
           options: {
-
+            title: "I AM TITLE"
           },
           show: true,
           templateUrl: 'views/info-window.html',
@@ -216,7 +230,8 @@ angular.module('cinemaApp')
       
       $scope.cinemaWindows.push(window);      
       $scope.cinemaMarkers.push(map_coords);
-      };
+      }
+      console.log($scope.cinemaWindows);
     };
 
     /* youtube player control */

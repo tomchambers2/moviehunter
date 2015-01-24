@@ -117,10 +117,50 @@
 	<button ng-if="filtered" class="reset-filter" ng-click="resetFilter()">Reset filter</button>
 	<button class="reset-filter" ng-if="filterOptions.filtered" ng-click="resetCinemas()">Reset map</button>
 
-	<ui-gmap-google-map center="map.center" zoom="map.zoom" events="mapEvents">
-		<ui-gmap-markers models="cinemaMarkers" events="events" options="'options'" coords="'self'" icon="'icon'" fit="'true'"  popover-placement="top" popover="On the Top!">
-            <ui-gmap-windows models="cinemaWindows" templateUrl="'templateUrl'" templateParameter="'templateParameter'" options="'options'">
-            </ui-gmap-windows>
+<map zoom="11" 
+  center="{{map.center.latitude}},{{map.center.longitude}}" 
+  disable-default-u-i="true"
+  disable-double-click-zoom="true"
+  draggable="true"
+  draggable-cursor="help"
+  dragging-cursor="move"
+  keyboard-shortcuts="false"
+  max-zoom="12"
+  min-zoom="8"
+  tilt="45"
+  map-type-id="TERRAIN">
+	
+  <marker ng-repeat="cinema in cinemaMarkers"
+      position="{{cinema.latitude}},{{cinema.longitude}}"
+      title="Hello Marker"
+      animation="Animation.BOUNCE"
+      draggable="true"
+      visible="true"
+      icon="images/cinema_icons/cinema.png"
+      >
+
+  </marker>     
+		<info-window
+		position="{{window.coords.latitude}},{{window.coords.longitude}}"
+		visible="true">
+		<div ng-non-bindable>
+		  <div id="siteNotice">ding</div>
+		</div>
+		</info-window> 		
+</map>	
+
+<div  ng-repeat="window in cinemaWindows">
+	{{window.coords.latitude}},{{window.coords.longitude}}
+</div>
+
+<!-- 	<ui-gmap-google-map center="map.center" zoom="map.zoom" events="mapEvents">
+		<ui-gmap-markers models="cinemaMarkers" events="events" options="'options'" coords="'self'" icon="'icon'" fit="'true'">
+	        <ui-gmap-windows show="'show'">
+	        	<div  ng-non-bindable>
+	        		{{random}}
+      				Title: {{title}} {{venue_id}}
+    			</div>
+	        </ui-gmap-windows>
         </ui-gmap-markers>
-	</ui-gmap-google-map>
+	</ui-gmap-google-map> -->
 </div>

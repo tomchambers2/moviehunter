@@ -26,7 +26,8 @@ angular
     'angulartics',
     'angulartics.segment.io',
     'ui.bootstrap',
-    'ngFitText'
+    'ngFitText',
+    'ngMap'
   ])
   .config(function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);

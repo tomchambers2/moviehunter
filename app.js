@@ -11,7 +11,8 @@ var users = require('./routes/users');
 var app = express();
 
 // view engine setup
-app.use(require('prerender-node').set('prerenderToken', 'jXTJoi2gBRpPjz6bgPyl'));
+var seojs = require('express-seojs');
+app.use(seojs('4quqg3pv92996i7ybl72h56hr'));
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
