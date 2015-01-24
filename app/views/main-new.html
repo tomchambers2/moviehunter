@@ -27,7 +27,7 @@
 		
 			<a ng-click="openTrailer(movie.details.youtube)"><i class="fa fa-play"></i> trailer</a>
 			<a ng-if="filterOptions.movie!=movie.title" ng-click="highlightCinemas(movie.cinemas, movie)"><i class="fa fa-film"></i> Cinemas</a>
-			<a ng-if="filterOptions.movie==movie.title" ng-click="resetCinemas()">Reset map</a>
+			<a ng-if="filterOptions.movie==movie.title" ng-click="reset()">Reset map</a>
 		
 			<div class="rating">
 				<a ng-href="http://www.imdb.com/title/{{movie.imdb.imdbId}}/" target="_blank" ng-if="movie.imdb.imdbId"><img src="./images/imdb.png" alt="IMDb"></a>
@@ -114,10 +114,11 @@
 </div>
 
 <div class="map-container">
-	<button ng-if="filtered" class="reset-filter" ng-click="resetFilter()">Reset filter</button>
-	<button class="reset-filter" ng-if="filterOptions.filtered" ng-click="resetCinemas()">Reset map</button>
+	<button ng-if="filtered || filterOptions.filtered" class="reset-filter" ng-click="reset()">Reset map</button>
 
-<map zoom="11" 
+	<div id="map-canvas"></div>
+
+<!-- <map zoom="11" 
   center="{{map.center.latitude}},{{map.center.longitude}}" 
   disable-default-u-i="true"
   disable-double-click-zoom="true"
@@ -151,7 +152,7 @@
 
 <div  ng-repeat="window in cinemaWindows">
 	{{window.coords.latitude}},{{window.coords.longitude}}
-</div>
+</div> -->
 
 <!-- 	<ui-gmap-google-map center="map.center" zoom="map.zoom" events="mapEvents">
 		<ui-gmap-markers models="cinemaMarkers" events="events" options="'options'" coords="'self'" icon="'icon'" fit="'true'">

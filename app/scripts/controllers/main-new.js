@@ -10,17 +10,39 @@
 angular.module('cinemaApp')
   .controller('MainNewCtrl', function ($scope, $location, $q, $timeout, Proxy, Geocoder, tempData, choices, localStorageService, collatedata, geolocation) {
 
-    var timeouts = {
-      map: []
+  var timeouts = {
+    map: []
+  }
+
+function initialize() {
+  var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
+  var mapOptions = {
+    zoom: 4,
+    center: myLatlng
+  };
+
+  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  $scope.map = map;
+  //$scope.map.setCenter(new google.maps.LatLng(54.57951, -4.41387));
+
+  google.maps.event.addListener(map, 'dragend', function() {
+    var self = this;
+    console.log(this);
+    for (var i = 0; i < timeouts.map.length; i++) {
+      $timeout.cancel(timeouts.map[i]);
     };
 
+    var timeout = $timeout(function() {
+      $scope.showSearchResults(self.center.k, self.center.D);
+    }, 560);
+
+    timeouts.map.push(timeout);    
+  });
+}
+
+initialize();
 
     $scope.mapEvents = {
-      tilesloaded: function (map) {
-        $scope.$apply(function () {
-          $scope.mapInstance = map;
-        });
-      },
       dragend: function(event) {
         for (var i = 0; i < timeouts.map.length; i++) {
           $timeout.cancel(timeouts.map[i]);
@@ -58,35 +80,7 @@ angular.module('cinemaApp')
       latitude = latitude ? latitude : 51.5000;
       longitude = longitude ? longitude : -0.1167;
 
-      $scope.map = {
-        center: {
-          latitude: latitude,
-          longitude: longitude
-        },
-        zoom: 11       
-      };
-
-      $scope.map = {
-        center: {
-          latitude: latitude,
-          longitude: longitude
-        },
-        zoom: 11       
-      };      
-
-      $scope.marker = {
-        id: 0,
-        coords: {
-          latitude: latitude,
-          longitude: longitude
-        },
-        options: { 
-          draggable: true,
-          visible: true,
-          title: '"There\'s no place like home"',
-          zIndex: 1000
-        }
-      };
+      $scope.map.setCenter(new google.maps.LatLng(latitude, longitude));
     };
     setMap();
 
@@ -120,15 +114,8 @@ angular.module('cinemaApp')
         $scope.movieList[id].chosenCinemaTimes = chosenCinema.times;
         $scope.movieList[id].chosenCinema = chosenCinema.info[0];
       }
-    };
-
-    $scope.resetCinemas = function() {
-      $scope.cinemaMarkers = $scope.fullCinemaMarkers;
-      $scope.filterOptions = {
-        filtered: false,
-        movie: null
-      }
-    };    
+      $scope.$apply();
+    };   
 
     $scope.openTrailer = function(youtubeId) {
       $scope.youtubeId = youtubeId;
@@ -138,10 +125,24 @@ angular.module('cinemaApp')
       $scope.youtubeId = null;
     };
 
-    $scope.resetFilter = function() {
+    $scope.reset = function() {
       $scope.movieList = $scope.storedMovieList;
       $scope.filtered = false;
-    }; 
+
+      if ($scope.cinemaMarkers.length) {
+        while($scope.cinemaMarkers.length) { 
+          $scope.cinemaMarkers.pop().setMap(null);
+        }
+        $scope.cinemaMarkers = [];
+        console.log($scope.cinemaMarkers);              
+      }
+
+      var postcode = tempData.getData('postcode');
+      var cinemaList = localStorageService.get('cinemaList'+postcode);
+      createCinemaMarkers(cinemaList);
+
+      $scope.filterOptions = {};
+    };
 
     // doSearch -> getLatLng -> get results for lat,lng -> get movie list
     //                           (turn into postcode)
@@ -175,12 +176,35 @@ angular.module('cinemaApp')
           return true;
         };
       });
-    };
+    };  
 
-    var createCinemaMarkers = function(cinemas) {
+    var createCinemaMarkers = function(cinemas) {      
+      while($scope.cinemaMarkers.length) { 
+        $scope.cinemaMarkers.pop().setMap(null);
+      }
       $scope.cinemaMarkers = [];
-      $scope.cinemaWindows = [];
-      $scope.cinemaInfo = {};
+      console.log($scope.cinemaMarkers);
+
+      var createInfoListener = function(marker, infoWindowText) {
+        var infowindow = new google.maps.InfoWindow({
+            content: infoWindowText
+        });
+        
+        google.maps.event.addListener(marker, 'click', function() {
+          infowindow.open($scope.map,marker);
+        });
+
+        infowindow.open($scope.map,marker);
+      };
+
+      var createFilterListener = function(marker) {
+        google.maps.event.addListener(marker, 'click', function() {
+          console.log('setting',marker,marker.id);
+          filterMovieList(marker.id);
+          $scope.filtered = true;            
+        });
+      };
+
       for (var i = 0; i < cinemas.length; i++) {
         
         getMoviesForCinema(cinemas[i].venue_id);
@@ -198,40 +222,39 @@ angular.module('cinemaApp')
           icon: 'images/cinema_icons/cinema.png'
         }
 
-        if (!cinemas[i].movieTitle) {
-          cinemas[i].movieTitle = '';
+        var latlng = new google.maps.LatLng(cinemas[i].coords.lat,cinemas[i].coords.lng);
+        var marker = new google.maps.Marker({
+            position: latlng,
+            map: $scope.map,
+            title: cinemas[i].title,
+            id: cinemas[i].venue_id
+        });        
+
+        if (cinemas[i].movieTitle) {        
+          var infoWindowText = '<b>'+cinemas[i].movieTitle+' at '+cinemas[i].title+'</b><p>'+cinemas[i].movieTimes+'</p>';
+
+          createInfoListener(marker, infoWindowText);        
+        } else {
+          createFilterListener(marker);          
         }
 
-        $scope.cinemaInfo[cinemas[i].venue_id] = {};
-        $scope.cinemaInfo[cinemas[i].venue_id].movieTitle = cinemas[i].movieTitle;
-        $scope.cinemaInfo[cinemas[i].venue_id].movieTimes = cinemas[i].movieTimes;
-
-        var parameters = {
-            movieTitle: cinemas[i].movieTitle,
-            movieTimes: cinemas[i].movieTimes,
-            stuff: 'from props'
-        }
-
-        var window = {
-          id: cinemas[i].venue_id,
-          coords: {
-            latitude: cinemas[i].coords.lat,
-            longitude: cinemas[i].coords.lng
-          },
-          options: {
-            title: "I AM TITLE"
-          },
-          show: true,
-          templateUrl: 'views/info-window.html',
-          templateParameter: parameters,
-          isIconVisibleOnClick: true,
-          closeClick: 'none'
-        }
-      
-      $scope.cinemaWindows.push(window);      
-      $scope.cinemaMarkers.push(map_coords);
+        $scope.cinemaMarkers.push(marker);
       }
-      console.log($scope.cinemaWindows);
+      var bounds = new google.maps.LatLngBounds();
+      for(i=0;i<$scope.cinemaMarkers.length;i++) {
+        console.log('POS',$scope.cinemaMarkers[i].getPosition());
+        var pos = $scope.cinemaMarkers[i].getPosition();
+        if (!isNaN(pos.k)) {
+          bounds.extend($scope.cinemaMarkers[i].getPosition());
+        }
+      }
+      console.log("BOUNDS DONE!");
+
+      $scope.map.fitBounds(bounds);
+
+      console.log("BOUNDS FITTED");
+
+      console.log($scope.cinemaMarkers);
     };
 
     /* youtube player control */
@@ -330,6 +353,7 @@ angular.module('cinemaApp')
         collatedata.createMovieList(localStorageService.get('cinemaList'+postcode), postcode);
       } else {
         $scope.movieList = collatedata.getMovieList(postcode).list;
+        $scope.storedMovieList = $scope.movieList;
       }
       $scope.loading = 2;    
     }
@@ -369,7 +393,7 @@ angular.module('cinemaApp')
           });
           collatedata.createMovieList(result, postcode);
           $scope.movieList = collatedata.movieList;
-          console.log($scope.movieList)
+          $scope.storedMovieList = $scope.movieList;
         });
       }, function() {
         console.log('We got an error with the postcode');
@@ -377,15 +401,11 @@ angular.module('cinemaApp')
     };	  
 
     var getLocationByIp = function() {
+      //geolocation.get().then(function(coords) {
       geolocation.get().then(function(coords) {
-        $scope.showSearchResults(coords.latitude, coords.longitude)
+        $scope.showSearchResults(51.5000,-0.1167)
       });
     } 
 
     getLocationByIp();
-
-
-    var latitude = latitude ? latitude : 51.5000;
-    var longitude = longitude ? longitude : -0.1167;
-    $scope.showSearchResults(latitude, longitude);
   });

@@ -90,8 +90,13 @@ h1, h2, h3, h4, h5, h6 {
   right: 0;
 }
 .angular-google-map,
-.angular-google-map-container {
+.angular-google-map-container,
+#map-canvas {
   height: 100%;
+}
+
+#map-canvas img {
+    max-width: none;
 }
 
 
