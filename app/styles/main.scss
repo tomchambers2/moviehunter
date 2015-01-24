@@ -5,7 +5,7 @@
 $footer-color: #000;
 $hover-color: #232323;
 $custom-font: 'Francois One', sans-serif;
-$secondary-font: 'Roboto', sans-serif;
+$secondary-font: 'Francois One', sans-serif;
 $banner-height: 120px;
 
 body {
@@ -72,138 +72,6 @@ h1, h2, h3, h4, h5, h6 {
   display: none;
 }
 
-/* for the main page - pre search */
-.before-search {
-  max-width: 100%;
-  height: 100%;
-  max-height: initial;
-  margin-left: auto;
-  margin-right: auto;
-}
-.search-header {
-  height: 300px;
-  margin-top: 0px;
-}
-.search-header.ng-hide {
-  margin-top: -300px;
-}
-@media screen and (max-height: 750px) {
-  .search-header {
-    height: 125px;
-    margin-top: 0px;
-  }
-  .search-header.ng-hide {
-    margin-top: -125px;
-  }
-
-}
-.search-header.ng-hide-add, .search-header.ng-hide-remove {
-  display: block !important;
-}
-.search-header {
-  transition: 0.4s linear all;
-}
-
-.form {
-  padding: 50px;
-}
-label {
-  position: fixed;
-  left: -9999px;
-}
-.form input {
-  font-size: 50px;
-  height: 100%;
-  font-family: 'Francois One', sans-serif;
-  padding: 15px;
-}
-.form .input-box {
-  height: 100px;
-}
-.form .search-box {
-  height: 100px;
-  padding: 0px;
-  background: url(../images/texturetastic_gray.png);
-}
-.form .button {
-  width: 100%;
-  height: 100%;
-  line-height: 67px;
-  font-family: $custom-font;
-  font-size: 50px;
-  text-align: center;
-}
-.form .search-button {
-  width: 100%;
-  height: 100%;
-  background: rgba(0,100,0,0.6) url(../images/mg.png) no-repeat;
-  background-size: auto 80px;
-  background-position: center;
-}
-.form .searching-button {
-  background: (0,0,0,0);
-  padding: 25px;
-}
-.form .loading-button {
-  background: none;
-  color: #555555;
-  font-size: 25px;
-  line-height: 33.5px
-}
-.form .next-button {
-  background: rgba(0,100,0,0.6);
-  background-image: none;
-  font-size: 35px;
-  line-height: 67px
-}
-.button.get-location {
-  font-size: 30px;
-  line-height: 30px;
-  margin-top: 40px;
-}
-
-.form .search-button[disabled=disabled],.form .search-button[disabled=disabled]:hover {
-  background-color: rgba(0,30,0,0.4);
-}
-.form .search-button:hover, .form .next-button:hover {
-  background-color: rgba(0,150,0,0.8);
-}
-@media screen and (max-height: 750px) {
-  .form input {
-    font-size: 35px;
-  }
-  .form .input-box {
-    height: 70px;
-  }
-  .form .search-box {
-    height: 70px;
-  }
-  .form .search-button {
-    background-image: url(../images/mg.png) no-repeat;
-    background-size: auto 50px;
-  }
-  .form .searching-button {
-    padding: 10px;
-  }
-  .form .loading-button {
-    line-height: 35px;
-    font-size: 24px !important;
-  }
-  .form .next-button {
-    font-size: 35px;
-    line-height: 35px
-  }
-}
-@media only screen and (max-width: 64em) {
-  .form .search-box-container {
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-  .form .search-box {
-    margin-top: 20px;
-  }
-}
-
 
 /* search page & map stuff */
 .sidebar {
@@ -217,9 +85,9 @@ label {
 .map-container {
   position: absolute;
   height: calc(100% - 120px);
-  width: 100%;
+  width: 69%;
   top: 120px;
-  left: 0;
+  right: 0;
 }
 .angular-google-map,
 .angular-google-map-container {
@@ -228,25 +96,13 @@ label {
 
 
 /* video player page */
-.load-message {
-  top:180px;
-  position: absolute;
-  width: 100%;
-}
-.load-message h2 {
-  font-family: $custom-font;
-  font-size: 40px;
-  color: #fff;
-}
+
 .details-box {
   border-radius: 20px;
   min-height: 100px;
   border: 10px solid #FFFFF4;
   background-color: white;
   overflow: auto;
-}
-.details-box h2 {
-
 }
 .youtube-wrapper {
   height: 100%;
@@ -332,179 +188,4 @@ label {
 }
 .button.showtimes-button:active {
   box-shadow: 0px 0px 30px #888;
-}
-
-
-/* choose date */
-.choose-date {
-  color: #fff;
-  background-image: url(../images/dirty_old_shirt.png);
-}
-.choose-date h1 {
-  font-size: 26px;
-  padding-bottom: 10px;
-}
-.choose-date h2 {
-  color: #fff;
-  font-family: $custom-font;
-}
-.choose-date h2 small {
-  color: #FAFAFA;
-}
-.choose-date h3 {
-  font-size: 16px;
-  color: #fff;
-}
-.choose-date h4 {
-  font-size: 18px;
-  color: #fff;
-}
-a.alternative-film-link {
-  color: #AEA9A7;
-}
-a.alternative-film-link:hover {
-  color: #817D7C;
-}
-.choose-date .date-table h1, .choose-date .date-table h2, .choose-date .date-table h3, .choose-date .date-table h4 {
-  font-family: $secondary-font;
-} 
-.choose-date .date-table h3 {
-  font-size: 18px;
-}
-.choose-date .date-table h4 {
-  font-size: 23px;
-}
-.choose-date .date-table {
-  padding-top: 50px;
-  padding-bottom: 50px;
-  font-family: $secondary-font;
-  display: table;
-}
-.choose-date .date-row {
-  height: 100%;
-  display: table-row;
-}
-.choose-date .date-cell {
-  display: table-cell;
-  padding: 15px;
-  padding-left: 45px;
-  padding-top: 30px;
-  padding-bottom: 30px;
-  background: rgba(35,35,35,0.8);
-}
-.choose-date .date-cell:hover {
-  background-color: #676767;
-  cursor: pointer;
-}
-.choose-date .date-cell:nth-of-type(odd) {
-  border-right: 1px solid #F3F3F3;
-}
-.choose-date .date-cell {
-  border-top: 1px solid #F3F3F3;
-}
-.choose-date .date-cell.first {
-  border-top: none;
-}
-
-/* pick cinema page */
-.pick-cinema {
-  background-image: url(../images/dirty_old_shirt.png);
-  color: #fff;
-}
-.pick-cinema h1 {
-  padding-bottom: 0px;
-}
-.pick-cinema .angular-google-map-container {
-  height: 600px;
-}
-.pick-cinema .map {
-  padding-right: 0px;
-}
-.pick-cinema .cinemas {
-  padding-left: 0px;
-}
-section.cinema-info {
-  background: rgba(35,35,35,0.8);  
-  border-bottom: 1px solid #444;
-  padding-top: 10px;
-  padding-left: 25px;
-  padding-right: 25px;
-  margin-top: 0px;
-  margin-bottom: 0px;
-}
-section.cinema-info:hover {
-  background-color: #676767;
-  cursor: pointer;
-}
-section.cinema-info:last-of-type {
-  border: 0;
-}
-section.cinema-info h2 {
-  font-size: 23px;
-}
-
-/* choose time */
-.choose-time {
-  background-image: url(../images/dirty_old_shirt.png);
-  color: #fff;
-}
-.choose-time h1 {
-  font-size: 26px;
-  padding-bottom: 10px;
-}
-.choose-time h2 {
-  color: #fff;
-  font-family: $custom-font;
-}
-.choose-time h2 small {
-  color: #FAFAFA;
-}
-.choose-time h3 {
-  font-size: 25px;
-  color: #fff;
-}
-.choose-time h4 {
-  font-size: 18px;
-  color: #fff;
-}
-.choose-time .times {
-  margin-top: 75px;
-  width: 70%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 75px;
-}
-.choose-time section {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  font-size: 30px;
-  border-top: 1px solid #444;
-  background-color: rgba(35,35,35,0.8);
-}
-.choose-time section:hover, .choose-time section:focus {
-  background-color: #676767;
-  cursor: pointer;
-}
-
-/* summary page */
-.summary .button {
-  font-family: $secondary-font;
-}
-.summary .sharing-row {
-  margin-top: 50px;
-}
-.summary .sharing-row .button {
-  width: 200px;
-}
-.button.gplus {
-  background-color: #DD4B39;
-  padding-left: 0;
-  padding-right: 0;
-}
-.button.twitter {
-  background: #00ABF0;
-}
-.button.email {
-  color: #000;
-  background-color: #fff;
 }

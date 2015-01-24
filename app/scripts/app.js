@@ -24,39 +24,13 @@ angular
     'LocalStorageModule',
     'angularMoment',
     'angulartics',
-    'angulartics.segment.io'
+    'angulartics.segment.io',
+    'ui.bootstrap',
+    'ngFitText'
   ])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
-      })
-      .when('/video', {
-        templateUrl: 'views/video.html',
-        controller: 'VideoCtrl'
-      })
-      .when('/choosedate', {
-        templateUrl: 'views/choosedate.html',
-        controller: 'ChoosedateCtrl'
-      })
-      .when('/pickcinema', {
-        templateUrl: 'views/pickcinema.html',
-        controller: 'PickcinemaCtrl'
-      })
-      .when('/choosetime', {
-        templateUrl: 'views/choosetime.html',
-        controller: 'ChoosetimeCtrl'
-      })
-      .when('/summary', {
-        templateUrl: 'views/summary.html',
-        controller: 'SummaryCtrl'
-      })
-      .when('/maptest', {
-        templateUrl: 'views/maptest.html',
-        controller: 'MaptestCtrl'
-      })
-      .when('/main-new', {
         templateUrl: 'views/main-new.html',
         controller: 'MainNewCtrl'
       })

@@ -35,7 +35,7 @@ angular.module('cinemaApp')
       var rtData = 'http://api.rottentomatoes.com/';
       var rtDataPath = encodeURIComponent('api/public/v1.0/movies.json?apikey=cbjztdb4a23whxw8maup8ne5&q='+title);
       Proxy.get(rtData + rtDataPath).then(function (result) {
-        if (result.movies[0]) {
+        if (result.movies && result.movies[0]) {
           var rt = {};
           rt.runtime = result.movies[0].runtime;
           rt.rating = result.movies[0].ratings.critics_score >= 0 ? result.movies[0].ratings.critics_score : ' --';
@@ -63,7 +63,11 @@ angular.module('cinemaApp')
         imdb.rating = result.imdbRating;
         if (!result.imdbRating) { imdb.rating = ' --' } else { imdb.rating = (result.imdbRating === 'N/A' || '') ? ' --' : result.imdbRating; };
         imdb.actors = result.Actors;
-        imdb.genre = result.Genre;
+        if (result.Genre) {
+          imdb.genre = result.Genre.split(',');
+        } else {
+          imdb.genre = ['Unknown'];
+        }
         imdb.imdbId = result.imdbID;
         imdb.synopsis = result.Plot === 'N/A' || '' ? 'No summary available' : result.Plot; 
         
@@ -76,9 +80,12 @@ angular.module('cinemaApp')
     var getData = function(title) {
     	var deferred = $q.defer();
 
+      console.log('getting data for',title);
+
     	var promises = [getImdbDetails(title),getRtDetails(title),getYoutubeData(title)];
 
-    	$q.allComplete(promises).then(function(data) {
+    	$q.all(promises).then(function(data) {
+        console.log('returned data for ',title,data);
     		var details = {
     			imdb: data[0],
     			rt: data[1],
@@ -86,7 +93,9 @@ angular.module('cinemaApp')
     		};
     			
     		deferred.resolve(details);
-    	});
+    	}, function(error) {
+        console.log(title,'failed',error);
+      });
 
     	return deferred.promise;
     }

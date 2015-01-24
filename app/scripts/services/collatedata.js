@@ -106,6 +106,7 @@ angular.module('cinemaApp')
     };
 
     var applyMovieData = function(link,title,postcode) {
+      console.log('will apply movie data for ',title);
       getMovieData.getData(title).then(function(details) {
         movies.list[link].details = details;
         localStorageService.add('movies'+postcode, movies);

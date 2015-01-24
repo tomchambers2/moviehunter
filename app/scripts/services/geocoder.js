@@ -29,13 +29,24 @@ angular.module('geocoder', ['ngStorage']).factory('Geocoder', function ($localSt
    *                  If we receive OVER_QUERY_LIMIT, increase interval and try again.
    */
   var executeNext = function () {
+    console.log('executing next');
+
     var task = queue[0],
       geocoder = new google.maps.Geocoder();
  
-    geocoder.geocode({ address : task.address }, function (result, status) {
- 
-      if (status === google.maps.GeocoderStatus.OK) {
- 
+    geocoder.geocode({ 
+      address : task.address,
+      componentRestrictions: { 
+        country: 'GB' 
+      }
+    }, function (result, status) { 
+      if (result[0].formatted_address==='United Kingdom') {
+        queue.shift();
+        task.d.reject({
+          type: 'zero',
+          message: 'Zero results for geocoding address ' + task.address
+        });        
+      } else if (status === google.maps.GeocoderStatus.OK) {
         var parsedResult = {
           lat: result[0].geometry.location.lat(),
           lng: result[0].geometry.location.lng(),
@@ -92,6 +103,7 @@ angular.module('geocoder', ['ngStorage']).factory('Geocoder', function ($localSt
  
   return {
     latLngForAddress : function (address) {
+      console.log('will geocode',address);
       var d = $q.defer();
  
       if (_.has(locations, address)) {
