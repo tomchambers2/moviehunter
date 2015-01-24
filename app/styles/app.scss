@@ -139,3 +139,19 @@ h2 {
 	float: right;
 	text-align: right;
 }
+
+.strapline {
+	position: absolute;
+	top: 0;
+	font-size: 1.4em;
+	z-index: 10000;
+	background: #fff;
+	padding: 6px;
+}
+
+.film-strapline {
+	width: 100%;
+	background: #fff;
+	padding: 10px;
+	font-size: 19px;
+}

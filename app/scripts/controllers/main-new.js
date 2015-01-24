@@ -89,6 +89,16 @@ initialize();
 
     /* interactions */
     var filterMovieList = function(venue_id) {
+      var postcode = tempData.getData('postcode');
+      var cinemaList = localStorageService.get('cinemaList'+postcode);
+
+      console.log(cinemaList);
+
+      $scope.filterOptions = {
+        filtered: true,
+        cinema: _.find(cinemaList, { venue_id: venue_id }).title
+      }
+
       for (var id in $scope.movieList) {
         var chosenCinema = $scope.movieList[id].cinemas[venue_id];
         $scope.movieList[id].chosenCinemaTimes = null;

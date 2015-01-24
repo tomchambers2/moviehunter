@@ -11,6 +11,10 @@
 </div>
 
 <div class="films">
+	<div class="film-strapline" ng-if="filterOptions.cinema">
+		Movies showing at {{filterOptions.cinema}}
+	</div>
+
 	<div class="row film" ng-repeat="movie in movieList" expand fixedHeight="184px">
 		<a ng-click="open = !open"><div class="show-more" ng-hide="open">See more <i class="fa fa-caret-down"></i></div></a>
 		<div class="film-poster">
@@ -115,6 +119,10 @@
 
 <div class="map-container">
 	<button ng-if="filtered || filterOptions.filtered" class="reset-filter" ng-click="reset()">Reset map</button>
+
+	<div class="strapline" ng-if="filterOptions.movie">
+		Showing cinemas playing {{filterOptions.movie}}
+	</div>
 
 	<div id="map-canvas"></div>
 
