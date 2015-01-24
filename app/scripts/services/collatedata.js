@@ -101,6 +101,7 @@ angular.module('cinemaApp')
         }
       }).then(function() {
         movies.collated = true;
+        window.prerenderReady = true;
         localStorageService.add('movies'+postcode, movies);
       });
     };

@@ -1,5 +1,7 @@
 'use strict';
 
+window.prerenderReady = false;
+
 /**
  * @ngdoc overview
  * @name cinemaApp
