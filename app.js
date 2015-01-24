@@ -11,6 +11,8 @@ var users = require('./routes/users');
 var app = express();
 
 // view engine setup
+app.use(require('prerender-node').set('prerenderToken', 'jXTJoi2gBRpPjz6bgPyl'));
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -19,7 +21,7 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use('/', routes);
 app.use('/users', users);
@@ -54,6 +56,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
-
 
 module.exports = app;
