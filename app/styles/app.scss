@@ -53,6 +53,7 @@ h2 {
 
 .film-poster {
 	float: left;
+	width: 109px;
 }
 
 .film-poster img {
@@ -62,6 +63,11 @@ h2 {
 .film-details {
 	color: #262526;
 	padding: 8px;
+	margin-left: 108px;
+}
+
+.film-details .row .row {
+	margin: 0;
 }
 
 .film-details h2 {
@@ -134,7 +140,7 @@ h2 {
 
 .rating .figure {
 	padding-left: 2%;
-	font-size: 36px;
+	font-size: 22px;
 	line-height: 36px;
 	float: right;
 	text-align: right;
@@ -144,9 +150,12 @@ h2 {
 	position: absolute;
 	top: 0;
 	font-size: 1.4em;
-	z-index: 10000;
 	background: #fff;
 	padding: 6px;
+	height: 45px;
+	line-height: 35px;
+	border: 1px solid;	
+	z-index: 50;	
 }
 
 .film-strapline {

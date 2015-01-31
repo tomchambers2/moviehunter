@@ -8,16 +8,41 @@
  * Controller of the cinemaApp
  */
 angular.module('cinemaApp')
-  .controller('MainNewCtrl', function ($scope, $location, $q, $timeout, Proxy, Geocoder, tempData, choices, localStorageService, collatedata, geolocation) {
+  .controller('MainNewCtrl', function ($scope, $location, $routeParams, $q, $timeout, Proxy, Geocoder, tempData, choices, localStorageService, collatedata, geolocation) {
 
   var timeouts = {
     map: []
   }
 
+  $scope.filters = {
+    moviename: ''
+  }
+  $scope.movieList = {};
+
+var sortByRtRating = function(item) {
+  if (!item.details) return -1;
+  if (typeof item.details.rt.rating != 'number')
+    return -1;
+  return item.details.rt.rating;
+}  
+
+var sortByImdbRating = function(item) {
+  if (!item.details) return -1;
+  if (typeof item.details.imdb.rating != 'number')
+    return -1;
+  return item.details.imdb.rating;
+} 
+
+$scope.filterFns = [
+    {l: "Rotten Tomatoes rating", fn: sortByRtRating}, 
+    {l: "IMDB rating", fn: sortByImdbRating}
+];
+$scope.filterFn = sortByRtRating;
+
 function initialize() {
   var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
   var mapOptions = {
-    zoom: 4,
+    zoom: 14,
     center: myLatlng
   };
 
@@ -26,6 +51,8 @@ function initialize() {
   //$scope.map.setCenter(new google.maps.LatLng(54.57951, -4.41387));
 
   google.maps.event.addListener(map, 'dragend', function() {
+    $scope.dontResize = true;
+
     var self = this;
     console.log(this);
     for (var i = 0; i < timeouts.map.length; i++) {
@@ -147,6 +174,11 @@ initialize();
         console.log($scope.cinemaMarkers);              
       }
 
+      for (var id in $scope.movieList) {
+        $scope.movieList[id].cinema = null;
+        $scope.movieList[id].times = null;
+      }
+
       var postcode = tempData.getData('postcode');
       var cinemaList = localStorageService.get('cinemaList'+postcode);
       createCinemaMarkers(cinemaList);
@@ -197,7 +229,8 @@ initialize();
 
       var createInfoListener = function(marker, infoWindowText) {
         var infowindow = new google.maps.InfoWindow({
-            content: infoWindowText
+            content: infoWindowText,
+            maxWidth: 120
         });
         
         google.maps.event.addListener(marker, 'click', function() {
@@ -237,7 +270,8 @@ initialize();
             position: latlng,
             map: $scope.map,
             title: cinemas[i].title,
-            id: cinemas[i].venue_id
+            id: cinemas[i].venue_id,
+            icon: 'images/cinema_icons/cinema.png'
         });        
 
         if (cinemas[i].movieTitle) {        
@@ -258,13 +292,10 @@ initialize();
           bounds.extend($scope.cinemaMarkers[i].getPosition());
         }
       }
-      console.log("BOUNDS DONE!");
-
-      $scope.map.fitBounds(bounds);
-
-      console.log("BOUNDS FITTED");
-
-      console.log($scope.cinemaMarkers);
+      if ($scope.resizeAfterSearch) {
+        $scope.map.fitBounds(bounds);
+        $scope.resizeAfterSearch = false;
+      }
     };
 
     /* youtube player control */
@@ -314,6 +345,7 @@ initialize();
 
     /* search functions */
     $scope.doSearch = function() {
+      $scope.resizeAfterSearch = true;
       $scope.searching = 1;
       Geocoder.latLngForAddress($scope.address).then(function(coords) {
           $scope.showSearchResults(coords.lat,coords.lng);
@@ -411,11 +443,18 @@ initialize();
     };	  
 
     var getLocationByIp = function() {
-      //geolocation.get().then(function(coords) {
       geolocation.get().then(function(coords) {
+      // geolocation.get().then(function(coords) {
+        $scope.resizeAfterSearch = true;
         $scope.showSearchResults(51.5000,-0.1167)
       });
     } 
 
-    getLocationByIp();
+    if ($routeParams.location) {
+      $scope.address = $routeParams.location;
+      $scope.doSearch();
+    } else {
+      getLocationByIp();
+    }
+
   });

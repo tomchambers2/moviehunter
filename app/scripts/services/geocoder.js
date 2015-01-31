@@ -40,6 +40,7 @@ angular.module('geocoder', ['ngStorage']).factory('Geocoder', function ($localSt
         country: 'GB' 
       }
     }, function (result, status) { 
+      console.log('RESULT',result);
       if (result[0].formatted_address==='United Kingdom') {
         queue.shift();
         task.d.reject({
@@ -103,7 +104,6 @@ angular.module('geocoder', ['ngStorage']).factory('Geocoder', function ($localSt
  
   return {
     latLngForAddress : function (address) {
-      console.log('will geocode',address);
       var d = $q.defer();
  
       if (_.has(locations, address)) {

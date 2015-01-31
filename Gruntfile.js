@@ -367,6 +367,12 @@ module.exports = function (grunt) {
           src: ['generated/*']
         }]
       },
+      index: {
+        expand: true,
+        cwd: '<%= yeoman.app %>',
+        dest: '<%= yeoman.dist %>/main.html',
+        src: ['index.html']
+      },
       styles: {
         expand: true,
         cwd: '<%= yeoman.app %>/styles',

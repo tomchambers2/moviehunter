@@ -29,7 +29,9 @@ angular
     'angulartics.segment.io',
     'ui.bootstrap',
     'ngFitText',
-    'ngMap'
+    'ngMap',
+    'angular-toArrayFilter',
+    'ngScrollbar'
   ])
   .config(function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
@@ -38,6 +40,21 @@ angular
         templateUrl: 'views/main-new.html',
         controller: 'MainNewCtrl'
       })
+      .when('/:location', {
+        templateUrl: 'views/main-new.html',
+        controller: 'MainNewCtrl',
+        reloadOnSearch: false        
+      })
+      .when('/:location/:film', {
+        templateUrl: 'views/main-new.html',
+        controller: 'MainNewCtrl',
+        reloadOnSearch: false        
+      })      
+      .when('/showtimes/:film', {
+        templateUrl: 'views/main-new.html',
+        controller: 'MainNewCtrl',
+        reloadOnSearch: false        
+      })      
       .otherwise({
         redirectTo: '/'
       });

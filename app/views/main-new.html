@@ -11,40 +11,62 @@
 </div>
 
 <div class="films">
-	<div class="film-strapline" ng-if="filterOptions.cinema">
-		Movies showing at {{filterOptions.cinema}}
+	<div class="film-strapline">
+		<div class="row">
+			<div class="medium-2 columns">Search:</div>
+			<div class="medium-10 columns"><input type="text" ng-model="filters.moviename"></div>
+		</div>
+	</div>	
+	<div class="film-strapline">
+		<div class="row">
+			<div class="medium-2 columns">Order by:</div>
+			<div class="medium-10 columns"><select ng-model="filterFn" ng-options="f.fn as f.l for f in filterFns"></select></div>
+		</div>
 	</div>
 
-	<div class="row film" ng-repeat="movie in movieList" expand fixedHeight="184px">
+	<div class="film" ng-repeat="movie in movieList | toArray | filter:filters.moviename | orderBy:filterFn:true" expand fixedHeight="184px">
 		<a ng-click="open = !open"><div class="show-more" ng-hide="open">See more <i class="fa fa-caret-down"></i></div></a>
 		<div class="film-poster">
 			<img ng-src="{{movie.details.rt.poster}}" alt="{{movie.title}}">
 		</div>
-		
-		<div class="film-details">
+		<div class="film-details" full-width margin="108">
 			<h2 class="film-title">{{movie.title}}</h2>
 		
 			<span ng-if="movie.chosenCinema">
 				{{movie.chosenCinema}}<br>
 				{{movie.chosenCinemaTimes.join(' | ')}}
 			</span>
-		
-			<a ng-click="openTrailer(movie.details.youtube)"><i class="fa fa-play"></i> trailer</a>
-			<a ng-if="filterOptions.movie!=movie.title" ng-click="highlightCinemas(movie.cinemas, movie)"><i class="fa fa-film"></i> Cinemas</a>
-			<a ng-if="filterOptions.movie==movie.title" ng-click="reset()">Reset map</a>
-		
-			<div class="rating">
-				<a ng-href="http://www.imdb.com/title/{{movie.imdb.imdbId}}/" target="_blank" ng-if="movie.imdb.imdbId"><img src="./images/imdb.png" alt="IMDb"></a>
-				<img ng-if="!movie.imdb.imdbId" src="/images/imdb.png" alt="IMDb"> <span class="figure">{{movie.details.imdb.rating}}</span>
-			</div>
-			<div class="rating">
-				<a ng-href="http://www.rottentomatoes.com/m/{{movie.details.rt.rtId}}/" target="_blank">
-				<img src="./images/rotten.png" alt="Rotten" ng-if="movie.details.rt.rating<50">
-				<img src="./images/fresh.png" alt="Fresh" ng-if="movie.details.rt.rating>50">
-				<img src="./images/rtgrey.png" alt="Unknown" ng-if="movie.detail.rt.rating===' --'">
-				</a>
-				<span class="figure">{{movie.details.rt.rating}}%</span>
-			</div>
+
+			<div class="row">
+				<div class="small-6 columns">
+					<a ng-click="openTrailer(movie.details.youtube)"><i class="fa fa-play"></i> Play trailer</a>
+				</div>
+				<div class="small-6 columns">
+					<a ng-if="filterOptions.movie!=movie.title" ng-click="highlightCinemas(movie.cinemas, movie)"><i class="fa fa-film"></i> Cinemas</a>
+					<a ng-if="filterOptions.movie==movie.title" ng-click="reset()">Reset map</a>	
+				</div>
+<!-- 			</div>
+				
+			<div class="row"> -->
+				<div class="small-6 columns">
+					<div class="rating">
+						<a ng-href="http://www.imdb.com/title/{{movie.imdb.imdbId}}/" target="_blank" ng-if="movie.imdb.imdbId"><img src="./images/imdb.png" alt="IMDb"></a>
+						<img ng-if="!movie.imdb.imdbId" src="/images/imdb.png" alt="IMDb"> <span class="figure">{{movie.details.imdb.rating}}</span>
+					</div>					
+				</div>
+				<div class="small-6 columns">
+					<div class="rating">
+						<a ng-href="http://www.rottentomatoes.com/m/{{movie.details.rt.rtId}}/" target="_blank">
+						<img src="./images/rotten.png" alt="Rotten" ng-if="movie.details.rt.rating<50">
+						<img src="./images/fresh.png" alt="Fresh" ng-if="movie.details.rt.rating>50">
+						<img src="./images/rtgrey.png" alt="Unknown" ng-if="movie.detail.rt.rating===' --'">
+						</a>
+						<span class="figure">{{movie.details.rt.rating}}%</span>
+					</div>					
+				</div>
+<!-- 			</div>
+ -->
+
 
 			<p>{{movie.details.imdb.genre.join(', ')}}</p>
 			<p>{{movie.details.imdb.synopsis}}</p>
@@ -52,6 +74,8 @@
 		
 			<div class="medium-6 columns"><p>Released on</p></div>
 			<div class="medium-6 columns"><p><strong>{{movie.details.rt.runtime}}</strong> minutes</p></div>
+
+		</div> <!-- end row -->
 		</div>
 
 		<div class="show-less"><a ng-click="open = !open">See less</a></div>
@@ -60,116 +84,18 @@
 
 <div class="medium-12 columns trailer" ng-if="youtubeId">
 	<button class="close-trailer" ng-click="closeTrailer()">Close trailer</button>
-	<youtube-video id="ytplayer" video-id="youtubeId" player="youtubePlayer.player" player-vars="playerVars" class="youtube-player"></youtube-video>
-
-	<div class="status-bar" fading-controls>
-		<div class="row status-row">
-			<div class="small-12 medium-2 columns controls text-center">
-				<div class="button trailer-control" ng-click="controlVideo()">
-					<i class="fa fa-pause" ng-hide="videoPaused"></i>
-					<i class="fa fa-play" ng-show="videoPaused"></i>
-				</div>
-			</div>
-			<div class="small-12 medium-8 columns">
-				<h2>Now showing: {{movie.movieTitle}}</h2>
-				<p>{{movie.imdb.synopsis}}</p>
-				<p ng-if="movie.imdb.actors"><strong>Cast:</strong> {{movie.imdb.actors}}</p>
-				<div class="row trailer-details">
-					<div class="small-3 columns">
-						<div class="row">
-							<div class="small-7 columns logo text-right">
-								<a ng-href="http://www.imdb.com/title/{{movie.imdb.imdbId}}/" target="_blank" ng-if="movie.imdb.imdbId"><img src="./images/imdb.png" alt="IMDb"></a>
-								<img ng-if="!movie.imdb.imdbId" src="/images/imdb.png" alt="IMDb">
-							</div> 
-							<div class="small-5 columns rating">
-								{{movie.imdb.rating}}
-							</div> 
-						</div>
-
-					</div>
-					<div class="small-3 columns">
-						<div class="row">
-							<div class="small-4 columns logo text-right">
-								<a ng-href="http://www.rottentomatoes.com/m/{{movie.rt.rtId}}/" target="_blank">
-									<img src="./images/rotten.png" alt="Rotten" ng-if="movie.rt.rating<50">
-									<img src="./images/fresh.png" alt="Fresh" ng-if="movie.rt.rating>50">
-									<img src="./images/rtgrey.png" alt="Unknown" ng-if="movie.rt.rating===' --'">
-								</a>
-							</div>
-							<div class="small-8 columns rating">
-								 {{movie.rt.rating}}%
-							</div>
-						</div>
-
-					</div>
-					<div class="small-3 columns">
-						<span ng-if="movie.rt.runtime">{{movie.rt.runtime}} <small>mins</small></span>
-					</div>
-					<div class="small-3 columns text-center">
-						<a href="#/choosedate/"><div class="button showtimes-button"></div></a>
-					</div>
-				</div>
-			</div>
-			<div class="small-12 medium-2 columns controls text-center">
-				<div class="button trailer-control" ng-click="showFilm()" ng-hide="reloading"><i class="fa fa-step-forward"></i></div>
-			</div>
-		</div>
-	</div>		
+	<youtube-video id="ytplayer" video-id="youtubeId" player="youtubePlayer.player" player-vars="playerVars" class="youtube-player"></youtube-video>	
 </div>
 
 <div class="map-container">
 	<button ng-if="filtered || filterOptions.filtered" class="reset-filter" ng-click="reset()">Reset map</button>
 
+	<div class="strapline" ng-if="!filterOptions.movie">
+		Showing cinemas near {{postcode}}
+	</div>
 	<div class="strapline" ng-if="filterOptions.movie">
-		Showing cinemas playing {{filterOptions.movie}}
+		Showing cinemas near {{postcode}} playing {{filterOptions.movie}}
 	</div>
 
 	<div id="map-canvas"></div>
-
-<!-- <map zoom="11" 
-  center="{{map.center.latitude}},{{map.center.longitude}}" 
-  disable-default-u-i="true"
-  disable-double-click-zoom="true"
-  draggable="true"
-  draggable-cursor="help"
-  dragging-cursor="move"
-  keyboard-shortcuts="false"
-  max-zoom="12"
-  min-zoom="8"
-  tilt="45"
-  map-type-id="TERRAIN">
-	
-  <marker ng-repeat="cinema in cinemaMarkers"
-      position="{{cinema.latitude}},{{cinema.longitude}}"
-      title="Hello Marker"
-      animation="Animation.BOUNCE"
-      draggable="true"
-      visible="true"
-      icon="images/cinema_icons/cinema.png"
-      >
-
-  </marker>     
-		<info-window
-		position="{{window.coords.latitude}},{{window.coords.longitude}}"
-		visible="true">
-		<div ng-non-bindable>
-		  <div id="siteNotice">ding</div>
-		</div>
-		</info-window> 		
-</map>	
-
-<div  ng-repeat="window in cinemaWindows">
-	{{window.coords.latitude}},{{window.coords.longitude}}
-</div> -->
-
-<!-- 	<ui-gmap-google-map center="map.center" zoom="map.zoom" events="mapEvents">
-		<ui-gmap-markers models="cinemaMarkers" events="events" options="'options'" coords="'self'" icon="'icon'" fit="'true'">
-	        <ui-gmap-windows show="'show'">
-	        	<div  ng-non-bindable>
-	        		{{random}}
-      				Title: {{title}} {{venue_id}}
-    			</div>
-	        </ui-gmap-windows>
-        </ui-gmap-markers>
-	</ui-gmap-google-map> -->
 </div>
