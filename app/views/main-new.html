@@ -1,33 +1,27 @@
-<div class="search">
-	<div class="row">
-		<div class="medium-8 columns">
-			<input type="text" ng-model="address">		
-		</div>
-		<div class="medium-4 columns">
-	 		<button class="button" ng-click="doSearch()">Search</button>
-	 		<button class="button" ng-if="geolocationFeature" ng-click="getLocation()"><i class="fa fa-location-arrow"></i></button>
-		</div>
-	</div>
-</div>
-
 <div class="films">
 	<div class="film-strapline">
+		{{selectedMovie}}
 		<div class="row">
-			<div class="medium-2 columns">Search:</div>
-			<div class="medium-10 columns"><input type="text" ng-model="filters.moviename"></div>
+			<div class="medium-9 columns">
+				<input type="text" ng-model="address">
+			</div>
+			<div class="medium-3 columns">
+		 		<button ng-click="doSearch()">Search</button>
+		 		<button ng-if="geolocationFeature" ng-click="getLocation()"><i class="fa fa-location-arrow"></i></button>
+			</div>
 		</div>
-	</div>	
+	</div>
 	<div class="film-strapline">
 		<div class="row">
-			<div class="medium-2 columns">Order by:</div>
-			<div class="medium-10 columns"><select ng-model="filterFn" ng-options="f.fn as f.l for f in filterFns"></select></div>
+			<div class="medium-6 columns"><input type="text" ng-model="filters.moviename"></div>
+			<div class="medium-6 columns"><select ng-model="filterFn" ng-options="f.fn as f.l for f in filterFns"></select></div>
 		</div>
 	</div>
 
-	<div class="film" ng-repeat="movie in movieList | toArray | filter:filters.moviename | orderBy:filterFn:true" expand fixedHeight="184px">
+	<div class="film" ng-repeat="movie in movies | filter:filterByMovieIds | filter:filters.moviename | orderBy:filterFn:true" expand fixedHeight="184px">
 		<a ng-click="open = !open"><div class="show-more" ng-hide="open">See more <i class="fa fa-caret-down"></i></div></a>
 		<div class="film-poster">
-			<img ng-src="{{movie.details.rt.poster}}" alt="{{movie.title}}">
+			<img ng-src="{{movie.rt.poster}}" alt="{{movie.title}}">
 		</div>
 		<div class="film-details" full-width margin="108">
 			<h2 class="film-title">{{movie.title}}</h2>
@@ -39,43 +33,38 @@
 
 			<div class="row">
 				<div class="small-6 columns">
-					<a ng-click="openTrailer(movie.details.youtube)"><i class="fa fa-play"></i> Play trailer</a>
+					<a ng-click="openTrailer(movie.youtube)"><i class="fa fa-play"></i> Play trailer</a>
 				</div>
 				<div class="small-6 columns">
-					<a ng-if="filterOptions.movie!=movie.title" ng-click="highlightCinemas(movie.cinemas, movie)"><i class="fa fa-film"></i> Cinemas</a>
+					<a ng-if="selectedMovie!==movie.id" ng-click="filterCinemas(movie.id)"><i class="fa fa-film"></i> Showing at</a>
+					<a ng-if="selectedMovie===movie.id" ng-click="unfilterCinemas()"><i class="fa fa-film"></i> Show all cinemas</a>
 					<a ng-if="filterOptions.movie==movie.title" ng-click="reset()">Reset map</a>	
 				</div>
-<!-- 			</div>
-				
-			<div class="row"> -->
 				<div class="small-6 columns">
 					<div class="rating">
 						<a ng-href="http://www.imdb.com/title/{{movie.imdb.imdbId}}/" target="_blank" ng-if="movie.imdb.imdbId"><img src="./images/imdb.png" alt="IMDb"></a>
-						<img ng-if="!movie.imdb.imdbId" src="/images/imdb.png" alt="IMDb"> <span class="figure">{{movie.details.imdb.rating}}</span>
+						<img ng-if="!movie.imdb.imdbId" src="/images/imdb.png" alt="IMDb"> <span class="figure">{{movie.imdb.rating}}</span>
 					</div>					
 				</div>
 				<div class="small-6 columns">
 					<div class="rating">
-						<a ng-href="http://www.rottentomatoes.com/m/{{movie.details.rt.rtId}}/" target="_blank">
-						<img src="./images/rotten.png" alt="Rotten" ng-if="movie.details.rt.rating<50">
-						<img src="./images/fresh.png" alt="Fresh" ng-if="movie.details.rt.rating>50">
-						<img src="./images/rtgrey.png" alt="Unknown" ng-if="movie.detail.rt.rating===' --'">
+						<a ng-href="http://www.rottentomatoes.com/m/{{movie.rt.rtId}}/" target="_blank">
+						<img src="./images/rotten.png" alt="Rotten" ng-if="movie.rt.rating<50">
+						<img src="./images/fresh.png" alt="Fresh" ng-if="movie.rt.rating>50">
+						<img src="./images/rtgrey.png" alt="Unknown" ng-if="movie.rt.rating===' --'">
 						</a>
-						<span class="figure">{{movie.details.rt.rating}}%</span>
+						<span class="figure">{{movie.rt.rating}}%</span>
 					</div>					
 				</div>
-<!-- 			</div>
- -->
 
-
-			<p>{{movie.details.imdb.genre.join(', ')}}</p>
-			<p>{{movie.details.imdb.synopsis}}</p>
-			<p>Starring <strong>{{movie.details.imdb.actors}}</strong></p>
+			<p>{{movie.imdb.genre.join(', ')}}</p>
+			<p>{{movie.imdb.synopsis}}</p>
+			<p>Starring <strong>{{movie.imdb.actors}}</strong></p>
 		
 			<div class="medium-6 columns"><p>Released on</p></div>
-			<div class="medium-6 columns"><p><strong>{{movie.details.rt.runtime}}</strong> minutes</p></div>
+			<div class="medium-6 columns"><p><strong>{{movie.rt.runtime}}</strong> minutes</p></div>
 
-		</div> <!-- end row -->
+		</div>
 		</div>
 
 		<div class="show-less"><a ng-click="open = !open">See less</a></div>
@@ -83,7 +72,7 @@
 </div>
 
 <div class="medium-12 columns trailer" ng-if="youtubeId">
-	<button class="close-trailer" ng-click="closeTrailer()">Close trailer</button>
+	<div class="close-trailer" ng-click="closeTrailer()"><i class="fa fa-times-circle-o"></i></div>
 	<youtube-video id="ytplayer" video-id="youtubeId" player="youtubePlayer.player" player-vars="playerVars" class="youtube-player"></youtube-video>	
 </div>
 
@@ -97,5 +86,6 @@
 		Showing cinemas near {{postcode}} playing {{filterOptions.movie}}
 	</div>
 
+	<markers data-cinemas="{{cinemas}}" data-selected-movie="{{selectedMovie}}" map="map"></markers>
 	<div id="map-canvas"></div>
 </div>

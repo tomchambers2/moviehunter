@@ -29,9 +29,9 @@ angular
     'angulartics.segment.io',
     'ui.bootstrap',
     'ngFitText',
-    'ngMap',
     'angular-toArrayFilter',
-    'ngScrollbar'
+    'ngScrollbar',
+    'angular-lodash'
   ])
   .config(function ($routeProvider, $locationProvider) {
     $locationProvider.html5Mode(true);
