@@ -4,6 +4,7 @@ var favicon = require('static-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var compression = require('compression');
 
 var routes = require('./routes/index');
 
@@ -15,6 +16,7 @@ app.use(require('prerender-node').set('prerenderToken', 'jXTJoi2gBRpPjz6bgPyl'))
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+app.use(compression());
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());

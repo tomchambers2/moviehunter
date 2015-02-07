@@ -48,7 +48,7 @@
 		<div ng-class="{'movie-highlight':movie.id===selectedMovie}" class="film" expand fixedHeight="184px">
 			<a ng-click="open = !open"><div class="show-more" ng-hide="open">See more <i class="fa fa-caret-down"></i></div></a>
 			<div class="film-poster">
-				<img ng-src="{{::movie.rt.poster}}" alt="{{::movie.title}}">
+				<img ng-src="{{::movie.rt.poster}}" alt="{{::movie.title}}" width="109" height="162">
 			</div>
 			<div class="film-details" full-width margin="108">
 				<h2 class="film-title">{{::movie.title}}</h2>
