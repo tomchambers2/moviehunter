@@ -14,7 +14,7 @@ angular.module('cinemaApp')
       replace: true,
       link: function postLink(scope, element) {
         
-        scope.$on('error',function(message) {
+        scope.$on('error',function() {
         	element.removeClass('hidden');
         	element.text('Sorry, we couldn\'t find that address');
         	$timeout(function() {

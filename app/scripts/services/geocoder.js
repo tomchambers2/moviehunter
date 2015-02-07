@@ -10,6 +10,7 @@
  */
  
 /*global angular: true, google: true, _ : true */
+/*jshint camelcase: false */
  
 'use strict';
  

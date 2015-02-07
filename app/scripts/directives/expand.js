@@ -7,7 +7,7 @@
  * # expand
  */
 angular.module('cinemaApp')
-  .directive('expand', function ($rootScope) {
+  .directive('expand', function () {
     return {
       restrict: 'A',
       link: function postLink(scope, element, attrs) {

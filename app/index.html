@@ -10,26 +10,26 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
-    <link rel="stylesheet" href="bower_components/ng-scrollbar/dist/ng-scrollbar.min.css">
     <!-- bower:css -->
-    <link rel="stylesheet" href="bower_components/foundation/css/foundation.css" />
+    <link rel="stylesheet" href="/bower_components/foundation/css/foundation.css" />
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/app.css">
-    <link rel="stylesheet" href="styles/spinner.css">
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/app.css">
+    <link rel="stylesheet" href="/styles/spinner.css">
     <!-- endbuild -->
     <link href='http://fonts.googleapis.com/css?family=Francois+One|Roboto' rel='stylesheet' type='text/css'>
   </head>
   <body ng-app="cinemaApp"> 
     <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="/http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
       <nav class="top-bar" data-topbar>
         <ul class="title-area">
-            <img src="./images/logo.png" alt="Moviehunter logo" class="logo">
+            <img src="/images/logo.png" alt="Moviehunter logo" class="logo">
+            <img src="/images/filmstrip.png" class="filmstrip" alt="">
         </ul>
       </nav>
 
@@ -48,85 +48,78 @@
 
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
-    <script src="bower_components/es5-shim/es5-shim.js"></script>
-    <script src="bower_components/json3/lib/json3.min.js"></script>
+    <script src="/bower_components/es5-shim/es5-shim.js"></script>
+    <script src="/bower_components/json3/lib/json3.min.js"></script>
     <![endif]-->
     <!-- endbuild -->
 
     <script src="//maps.googleapis.com/maps/api/js?libraries=places,directions,geometry"></script>
     <!-- build:js(.) scripts/vendor.js -->
-    <script src="bower_components/geofire/dist/geofire.js"></script>
-    <script src="bower_components/firebase/firebase.js"></script>
-    <script src="bower_components/rsvp/rsvp.js"></script>
+    <script src="/bower_components/geofire/dist/geofire.min.js"></script>
+    <script src="/bower_components/firebase/firebase.js"></script>
+    <script src="/bower_components/rsvp/rsvp.min.js"></script>
+    <script src="/bower_components/gmaps-markerclusterer-plus/src/markerclusterer_packed.js"></script>
+    <script src="/bower_components/lodash/dist/lodash.min.js"></script>
     <!-- bower:js -->
-    <script src="bower_components/modernizr/modernizr.js"></script>
-    <script src="bower_components/jquery/dist/jquery.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/json3/lib/json3.js"></script>
-    <script src="bower_components/angular-resource/angular-resource.js"></script>
-    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
-    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script src="bower_components/angular-animate/angular-animate.js"></script>
-    <script src="bower_components/angular-touch/angular-touch.js"></script>
-    <script src="bower_components/angular-route/angular-route.js"></script>
-    <script src="bower_components/fastclick/lib/fastclick.js"></script>
-    <script src="bower_components/jquery.cookie/jquery.cookie.js"></script>
-    <script src="bower_components/jquery-placeholder/jquery.placeholder.js"></script>
-    <script src="bower_components/foundation/js/foundation.js"></script>
-    <script src="bower_components/lodash/dist/lodash.compat.js"></script>
-    <script src="bower_components/angular-google-maps/dist/angular-google-maps.js"></script>
-    <script src="bower_components/ngstorage/ngStorage.js"></script>
-    <script src="bower_components/ngFitText/ng-FitText.js"></script>
-    <script src="bower_components/angular-youtube-mb/src/angular-youtube-embed.js"></script>
-    <script src="bower_components/angular-local-storage/angular-local-storage.js"></script>
-    <script src="bower_components/moment/moment.js"></script>
-    <script src="bower_components/angular-moment/angular-moment.js"></script>
-    <script src="bower_components/jquery-waypoints/waypoints.js"></script>
-    <script src="bower_components/SHA-1/sha1.js"></script>
-    <script src="bower_components/angulartics/src/angulartics.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-adobe.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-chartbeat.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-flurry.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-ga-cordova.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-ga.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-gtm.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-kissmetrics.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-mixpanel.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-piwik.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-scroll.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-segmentio.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-splunk.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-woopra.js"></script>
-    <script src="bower_components/angulartics/src/angulartics-marketo.js"></script>
-    <script src="bower_components/angular-toArrayFilter/toArrayFilter.js"></script>
-    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/bower_components/modernizr/modernizr.js"></script>
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="/bower_components/es5-shim/es5-shim.js"></script>
+    <script src="/bower_components/angular/angular.js"></script>
+    <script src="/bower_components/json3/lib/json3.js"></script>
+    <script src="/bower_components/angular-resource/angular-resource.js"></script>
+    <script src="/bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="/bower_components/angular-touch/angular-touch.js"></script>
+    <script src="/bower_components/angular-route/angular-route.js"></script>
+    <script src="/bower_components/fastclick/lib/fastclick.js"></script>
+    <script src="/bower_components/jquery.cookie/jquery.cookie.js"></script>
+    <script src="/bower_components/jquery-placeholder/jquery.placeholder.js"></script>
+    <script src="/bower_components/foundation/js/foundation.js"></script>
+    <script src="/bower_components/ngstorage/ngStorage.js"></script>
+    <script src="/bower_components/angular-youtube-mb/src/angular-youtube-embed.js"></script>
+    <script src="/bower_components/angular-local-storage/angular-local-storage.js"></script>
+    <script src="/bower_components/moment/moment.js"></script>
+    <script src="/bower_components/angular-moment/angular-moment.js"></script>
+    <script src="/bower_components/jquery-waypoints/waypoints.js"></script>
+    <script src="/bower_components/SHA-1/sha1.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-adobe.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-chartbeat.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-flurry.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-ga-cordova.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-ga.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-gtm.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-kissmetrics.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-mixpanel.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-piwik.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-scroll.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-segmentio.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-splunk.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-woopra.js"></script>
+    <script src="/bower_components/angulartics/src/angulartics-marketo.js"></script>
+    <script src="/bower_components/angular-toArrayFilter/toArrayFilter.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="/bower_components/firebase/firebase.js"></script>
+    <script src="/bower_components/rsvp/rsvp.min.js"></script>
+    <script src="/bower_components/geofire/dist/geofire.js"></script>
+    <script src="/bower_components/angularjs-toaster/toaster.js"></script>
     <!-- endbower -->
-    <script src="bower_components/angular-lodash/angular-lodash.js"></script>
-    <script src="bower_components/ngmap/build/scripts/ng-map.js"></script>
-    <script src="bower_components/ng-scrollbar/dist/ng-scrollbar.min.js"></script>    
+    <script src="/bower_components/angular-lodash/angular-lodash.js"></script>
+    <script src="/bower_components/ngmap/build/scripts/ng-map.js"></script>
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
-        <script src="scripts/services/getdetails.js"></script>
-        <script src="scripts/services/dataservice.js"></script>
-        <script src="scripts/services/postcodevalidator.js"></script>
-        <script src="scripts/directives/ngAutocomplete.js"></script>
-        <script src="scripts/services/geocoder.js"></script>
-        <script src="scripts/services/collatedata.js"></script>
-        <script src="scripts/directives/fading-controls.js"></script>
-        <script src="scripts/filters/trimwords.js"></script>
-        <script src="scripts/filters/splitoncommas.js"></script>
-        <script src="scripts/services/directions.js"></script>
-        <script src="scripts/directives/errormessage.js"></script>
-        <script src="scripts/services/allcomplete.js"></script>
-        <script src="scripts/controllers/main-new.js"></script>
-        <script src="scripts/services/getmoviedata.js"></script>
-        <script src="scripts/filters/selectedtags.js"></script>
-        <script src="scripts/services/geolocation.js"></script>
-        <script src="scripts/directives/expand.js"></script>
-        <script src="scripts/directives/fullwidth.js"></script>
-        <script src="scripts/directives/markers.js"></script>
+        <script src="/scripts/app.js"></script>
+        <script src="/scripts/directives/ngAutocomplete.js"></script>
+        <script src="/scripts/services/geocoder.js"></script>
+        <script src="/scripts/directives/errormessage.js"></script>
+        <script src="/scripts/controllers/main.js"></script>
+        <script src="/scripts/services/geolocation.js"></script>
+        <script src="/scripts/directives/expand.js"></script>
+        <script src="/scripts/directives/fullwidth.js"></script>
+        <script src="/scripts/directives/markers.js"></script>
+        <script src="/scripts/directives/movietimes.js"></script>
         <!-- endbuild -->
 
     <script type="text/javascript">

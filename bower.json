@@ -12,9 +12,7 @@
     "angular-touch": "1.2.16",
     "angular-route": "1.2.16",
     "foundation": "~5.3.3",
-    "angular-google-maps": "~2.0.12",
     "ngstorage": "~0.3.0",
-    "ngFitText": "~2.4.0",
     "angular-youtube-mb": "~0.1.6",
     "angular-local-storage": "~0.0.7",
     "angular-moment": "~0.8.0",
@@ -24,7 +22,8 @@
     "ng-scrollbar": "~0.0.7",
     "geofire": "~3.2.1",
     "firebase": "~2.1.2",
-    "rsvp": "~3.0.16"
+    "rsvp": "~3.0.16",
+    "angularjs-toaster": "~0.4.10"
   },
   "devDependencies": {
     "angular-mocks": "1.2.16",
@@ -34,6 +33,7 @@
   "resolutions": {
     "angular-google-maps": "~2.0.12",
     "angular-youtube-mb": "~0.1.6",
-    "ngFitText": "~3.1.0"
+    "ngFitText": "~3.1.0",
+    "angular": ">1.2.6"
   }
 }

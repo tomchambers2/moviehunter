@@ -15,7 +15,6 @@ angular.module('cinemaApp')
 		link: function postLink(scope) {
 			scope.$watch('yId', function(newVal) {
 				if (newVal) {
-					console.log('will play trailer with',yId);
 					scope.url = $sce.trustAsResourceUrl('http://www.youtube.com/embed/'+newVal+'?autoplay=1&showinfo=0&controls=0&iv_load_policy=3&enablejsapi=1&rel=0');
 				}
 			}, true);
