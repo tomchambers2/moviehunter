@@ -17,9 +17,13 @@ angular.module('cinemaApp')
         function updateMovieTimes(cinema) {
           var movie = _.findWhere(scope.movies, { id: attrs.selectedMovie });
           var date = scope.selectedDay;
-          var movieTimes = [];
           movieTimes.push('<strong>Showtimes for '+moment(date).format('dddd')+'</strong>');
-          movieTimes.push(movie[cinema.tid][date].times.join(', '));
+          var movieTimes = [];
+          if (!movie[cinema.tid][date]) {
+            movieTimes.push('<strong>Not showing here on '+moment(date).format('dddd')+'</strong>');
+          } else {
+            movieTimes.push(movie[cinema.tid][date].times.join(', '));
+          }
 
           scope.markers[cinema.tid].movieInfo = '<strong>'+cinema.title+'</strong><br><i>Click for all movies at this cinema</i><ul class="movie-list"><li>'+movieTimes.join('</li><li>')+'</li></ul>';          
         }
@@ -43,8 +47,12 @@ angular.module('cinemaApp')
             if (attrs.selectedMovie) {
               var movie = _.findWhere(movies, { id: attrs.selectedMovie });
               var date = scope.selectedDay;
-              cinema.movieTimes.push('Showtimes for '+moment(date).format('ddd'));
-              cinema.movieTimes.push(movie[cinema.tid][date].times.join(', '));
+              cinema.movieTimes.push('Showtimes for '+moment(date).format('dddd'));
+              if (!movie[cinema.tid][date]) {
+                cinema.movieTimes.push('<strong>Not showing here on '+moment(date).format('dddd')+'</strong>');
+              } else {
+                cinema.movieTimes.push(movie[cinema.tid][date].times.join(', '));
+              }         
             }
 
             for (var i = 0; i < cinema.movies.length; i++) {

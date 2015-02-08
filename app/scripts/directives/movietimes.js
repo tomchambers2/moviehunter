@@ -23,9 +23,15 @@ angular.module('cinemaApp')
           if (!scope.selectedCinema) {
             return;
           }
+          if (!scope.movie[scope.selectedCinema][scope.selectedDay]) {
+            element.html('<div class="times-box"><p>Not showing here on '+moment(scope.selectedDay).format('dddd')+'</p></div>');
+            return;
+          }
+          console.log(scope.movie);
+          console.log(scope.selectedDay);
           var cinema = _.findWhere(scope.cinemas, { tid: scope.selectedCinema });
-          var html = '<p>Showtimes for '+cinema.title+' today</p>'+
-            '<p>'+scope.movie[scope.selectedCinema][scope.selectedDay].times.join(' | ')+'</p>';
+          var html = '<div class="times-box"><p>Showtimes for '+cinema.title+' today</p>'+
+            '<p>'+scope.movie[scope.selectedCinema][scope.selectedDay].times.join(' | ')+'</p></div>';
           element.html(html);
         }
 

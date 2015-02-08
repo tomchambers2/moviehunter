@@ -73,6 +73,20 @@ $custom-font: 'Francois One', sans-serif;
 .film-strapline {
 	background: #fff;
 	margin-bottom: 4px;
+	box-shadow: inset 0 0 7px #000000;
+}
+
+.film-strapline-content {
+	font-size: 25px;
+	width: 95%;
+	margin: auto;
+	padding: 5px;
+	display: block;
+	text-align: center;
+	h3 {
+		font-size: 18px;
+		color: #000;
+	}
 }
 
 .film-strapline button {
@@ -100,19 +114,21 @@ button {
 .search-box {
 	width: 95%;
 	margin: auto;
-	border: 1px solid #000;
+	border: 2px solid #CABF8E;
+	background: #FFF0B4;
 	margin: 6px;
 	.search-box-inner {
 		padding: 6px;
 	}
 	.sort {
-		width: 33%;
+		width: 20%;
 		float: left;
-		border-right: 1px solid #000;
 		padding: 6px;
+		text-align: right;
 	}
 	.select {
-		width: 66%;
+		border-left: 2px dashed #CABF8E;
+		width: 80%;
 		float: left;
 		padding: 6px;
 	}
@@ -140,6 +156,19 @@ button {
 			width: 95%;
 			margin: auto;
 		}
+	}
+}
+
+.times-box {
+	width: 100%;
+	margin: auto;
+	border: 2px solid #CABF8E;
+	background: #FFF0B4;
+	display: inline-block;
+	padding: 2px;
+	p {
+		margin: 0;
+		padding: 0;
 	}
 }
 
@@ -218,7 +247,7 @@ h2 {
 	overflow: hidden;
 	width: 90%;
 	margin: 5%;
-	box-shadow: 4px 4px 0px grey;
+	box-shadow: 4px 4px 4px grey;
 
 	position: relative;
 }
@@ -364,11 +393,11 @@ h2 {
 	padding: 6px;
 	height: 45px;
 	line-height: 35px;
-	border: 1px solid;	
+	border: 2px solid;	
 }
 
 .movie-highlight {
-	box-shadow: 4px 4px #EAB562;
+	box-shadow: 6px 6px 4px #EAB562;
 }
 
 .movie-list {

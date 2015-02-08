@@ -40,6 +40,25 @@
 		</div>
 	</div>
 
+	<div class="film-strapline" ng-show="selectedMovie && selectedCinema">
+		<span class="film-strapline-content">Movie times for {{selectedMovieObject.title}} at {{selectedCinemaObject.title}}</span>
+	</div>
+	<div class="film-strapline" ng-show="!selectedMovie && !selectedCinema">
+		<span class="film-strapline-content">Showing all movies playing at cinemas on the map
+		<h3>Drag or zoom the map to see films playing elsewhere</h3>
+		</span>
+	</div>	
+	<div class="film-strapline" ng-show="selectedCinema && !selectedMovie">
+		<span class="film-strapline-content">Showing all movies playing at {{selectedCinemaObject.title}} <i ng-click="resetFilters()" class="reset-filters fa fa-times-circle"></i>
+		<h3>Drag or zoom the map to see films playing elsewhere</h3>	
+		</span>	
+	</div>	
+	<div class="film-strapline" ng-show="selectedMovie && !selectedCinema">
+		<span class="film-strapline-content">Showing only cinemas playing {{selectedMovieObject.title}} in current map area<i  ng-click="resetFilters()" class="reset-filters fa fa-times-circle"></i>
+		<h3>Drag or zoom the map to see other cinemas playing {{selectedMovieObject.title}}</h3>
+		</span>		
+	</div>	
+
 	<div class="loading-movies" ng-hide="movies.length>0">
 		<h2>Loading movies now...</h2>
 	</div>
