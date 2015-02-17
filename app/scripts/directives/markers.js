@@ -17,8 +17,8 @@ angular.module('cinemaApp')
         function updateMovieTimes(cinema) {
           var movie = _.findWhere(scope.movies, { id: attrs.selectedMovie });
           var date = scope.selectedDay;
-          movieTimes.push('<strong>Showtimes for '+moment(date).format('dddd')+'</strong>');
           var movieTimes = [];
+          movieTimes.push('<strong>Showtimes for '+moment(date).format('dddd')+'</strong>');
           if (!movie[cinema.tid][date]) {
             movieTimes.push('<strong>Not showing here on '+moment(date).format('dddd')+'</strong>');
           } else {
@@ -44,8 +44,9 @@ angular.module('cinemaApp')
           cinema.movieTimes = [];
 
           if (cinema.movies) {
+            var movie;
             if (attrs.selectedMovie) {
-              var movie = _.findWhere(movies, { id: attrs.selectedMovie });
+              movie = _.findWhere(movies, { id: attrs.selectedMovie });
               var date = scope.selectedDay;
               cinema.movieTimes.push('Showtimes for '+moment(date).format('dddd'));
               if (!movie[cinema.tid][date]) {
@@ -56,16 +57,17 @@ angular.module('cinemaApp')
             }
 
             for (var i = 0; i < cinema.movies.length; i++) {
-              var movie = _.findWhere(movies, { id: cinema.movies[i] });
+              movie = _.findWhere(movies, { id: cinema.movies[i] });
               cinema.movieDetails.push(movie.title);
             }
           }
 
-          marker.movieInfo = '<strong>'+cinema.title+'</strong><br><i>Click to filter by this cinema</i><ul class="movie-list"><li>'+cinema.movieTimes.join('</li><li>')+'</li></ul>';
-          marker.cinemaInfo = '<strong>'+cinema.title+'</strong><br><i>Click to filter by this cinema</i><ul class="movie-list"><li>'+cinema.movieDetails.join('</li><li>')+'</li></ul>';
+          marker.movieInfo = '<strong>'+cinema.title+'</strong><br><i>Click icon to filter by this cinema</i><ul class="movie-list"><li>'+cinema.movieTimes.join('</li><li>')+'</li></ul>';
+          marker.cinemaInfo = '<strong>'+cinema.title+'</strong><br><i>Click icon to filter by this cinema</i><ul class="movie-list"><li>'+cinema.movieDetails.join('</li><li>')+'</li></ul>';
 
           var infowindow = new google.maps.InfoWindow({
-              maxWidth: 230
+              maxWidth: 230,
+              disableAutoPan : true
           });
 
           google.maps.event.addListener(marker, 'mouseover', function() {

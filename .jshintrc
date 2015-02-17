@@ -26,5 +26,6 @@
     "GeoFire": false,
     "MarkerClusterer": false,
     "moment": false
-  }
+  },
+  "asi": true
 }

@@ -1,5 +1,12 @@
 $custom-font: 'Francois One', sans-serif;
 
+.danger {
+	color: #9D0225;
+	&:hover {
+		color: #9D0225;
+	}
+}
+
 /*.films{
     scrollbar-face-color: #367CD2;
     scrollbar-shadow-color: #FFFFFF;
@@ -102,10 +109,15 @@ $custom-font: 'Francois One', sans-serif;
 		background: #fff;
 		color: #000;
 		border: 1px solid #000;
-		font-weight: bold;
+		//font-weight: bold;
 	}
 	button:hover {
 		background: #DCDCDC;
+	}
+	.active {
+		font-weight: bold;
+		box-shadow: inset 0px 0px 10px grey;
+		outline: none;
 	}
 }
 button {

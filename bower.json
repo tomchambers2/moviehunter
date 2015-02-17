@@ -23,7 +23,8 @@
     "geofire": "~3.2.1",
     "firebase": "~2.1.2",
     "rsvp": "~3.0.16",
-    "angularjs-toaster": "~0.4.10"
+    "angularjs-toaster": "~0.4.10",
+    "ng-pourover": "~0.1.19"
   },
   "devDependencies": {
     "angular-mocks": "1.2.16",

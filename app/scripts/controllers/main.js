@@ -8,7 +8,7 @@
  * Controller of the cinemaApp
  */
 angular.module('cinemaApp')
-.controller('MainCtrl', function ($scope, $location, $routeParams, $q, $timeout, Geocoder, geolocation) {
+.controller('MainCtrl', function ($scope, $location, $routeParams, $q, $timeout, Geocoder, geolocation, PourOver) {
   var ref = new Firebase('https://movielistings.firebaseio.com/');
   var cinemasRef = ref.child('cinemas');
   var moviesRef = ref.child('movies');
@@ -25,9 +25,15 @@ angular.module('cinemaApp')
     moviename: ''
   };
 
+  $scope.$watch('filters.moviename', function() {
+    $scope.selectedMovie = null;
+  })
+
   $scope.selectedMovie = null;
   $scope.selectedCinema = null;
   $scope.selectedDay = moment().startOf('day').valueOf();
+
+  $scope.selectedDayIndex = 0;
 
   $scope.tomorrowPlus1 = moment().startOf('day').add(2, 'days').format('dddd');
   $scope.tomorrowPlus2 = moment().startOf('day').add(3, 'days').format('dddd');
@@ -40,15 +46,15 @@ angular.module('cinemaApp')
 
   $scope.selectCinema = function(params) {
     if (!params.dontReset) {
-      console.log('will resetting');
       $scope.resetFilters();
     }
 
+    var cinema;
     if (!params.cinema) {
-      var cinema = _.findWhere($scope.cinemas, { tid: params.tid });
-      console.log('will update url');
+      cinema = _.findWhere($scope.cinemas, { tid: params.tid });
       updateUrl({cinema: cinema});
     }
+
     $scope.selectedCinema = params.tid;
     $scope.selectedCinemaObject = params.cinema || cinema;
     if (params.cinema) console.log('added',params.cinema.title);
@@ -83,6 +89,7 @@ angular.module('cinemaApp')
 
   $scope.selectDay = function(adjust) {
     $scope.selectedDay = moment().add(adjust, 'days').startOf('day').valueOf();
+    $scope.selectedDayIndex = parseInt(adjust, 10);
     //FIX: should get the formatted string of the day, not the moment object
   };
 
@@ -159,15 +166,17 @@ angular.module('cinemaApp')
 
   $scope.filterCinemas = function(params) {
     if (params.updateUrl) {
-      $scope.resetFilters();
-      updateUrl({ movie: params.movie });
+      //$scope.resetFilters();
+      //updateUrl({ movie: params.movie });
     }
 
     $scope.selectedMovie = params.movie.id;
     $scope.filters.moviename = params.movie.title;
     $scope.selectedMovieObject = params.movie;
+    console.log('set selected movie',$scope.selectedMovie);
 
-    $scope.$apply();
+    $timeout(function() {
+    });
   };
 
   $scope.unfilterCinemas = function() {
@@ -187,7 +196,7 @@ angular.module('cinemaApp')
     var myLatlng = new google.maps.LatLng(51.5000,-0.1167);
     var mapOptions = {
       zoom: 14,
-      minZoom: 13,
+      minZoom: 10,
       center: myLatlng
     };
 
@@ -198,6 +207,7 @@ angular.module('cinemaApp')
       maxZoom: 16,
       imageExtension: 'png',
       imagePath: '/images/cinema_icons/cinema-stack'
+      //zoomOnClick: false
     };
     var mc = new MarkerClusterer(map, [], mcOptions);
     $scope.mc = mc;
@@ -365,7 +375,7 @@ angular.module('cinemaApp')
     moviesRef.orderByChild('url').equalTo($routeParams.movie).on('child_added', function(result) {
       var movie = result.val();
       movie.id = result.key();
-      $scope.filterCinemas({ movie: movie, updateUrl: true });
+      $scope.filterCinemas({ movie: movie, updateUrl: false });
       $timeout(function() {
         $scope.filters.moviename = movie.title;
       });
