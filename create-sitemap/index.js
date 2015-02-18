@@ -84,7 +84,7 @@ var buildXML = function() {
 	    });
 	}, { addDeclaration: true });
 
-	fs.writeFile(path.join(__dirname, '../public/Sitemap.xml', data.toString(), function(err) {
+	fs.writeFile(path.join(__dirname, '../public/Sitemap.xml'), data.toString(), function(err) {
 		if (err) throw err;
 		console.log("Wrote sitemap to XML");
 	});

@@ -49,7 +49,7 @@ angular.module('cinemaApp')
 
         function addOtherDay(day, cinema, array) {
           if (scope.movie[cinema.tid][scope.selectedDays[day]]) {
-            array.push(moment(scope.selectedDays[day]).format('dddd'));
+            array.push('<a ng-click="selectDay('+day+')">'+moment(scope.selectedDays[day]).format('dddd')+'</a>');
           }
         }
 
@@ -66,9 +66,10 @@ angular.module('cinemaApp')
               if (!scope.movie[cinema.tid]) continue;
               if (!scope.movie[cinema.tid][scope.selectedDay]) {
                 var otherDays = [];
-                addOtherDay(1, cinema, otherDays);
-                addOtherDay(2, cinema, otherDays);
-                addOtherDay(3, cinema, otherDays);
+                for (var j = 0; j < 4; j++) {
+                    if (scope.selectedDays[j] === scope.selectedDay) continue;
+                    addOtherDay(j, cinema, otherDays);
+                };
                 html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+
                 '<p><i>No times '+moment(scope.selectedDay).format('dddd')+'. Showing '+otherDays.join(', ')+'</i></p></div>');
               } else {
