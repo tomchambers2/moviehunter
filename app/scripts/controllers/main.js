@@ -32,6 +32,12 @@ angular.module('cinemaApp')
   $scope.selectedMovie = null;
   $scope.selectedCinema = null;
   $scope.selectedDay = moment().startOf('day').valueOf();
+  $scope.selectedDays = {
+    0: moment().startOf('day').valueOf(),
+    1: moment().startOf('day').add(1, 'days').valueOf(),
+    2: moment().startOf('day').add(2, 'days').valueOf(),
+    3: moment().startOf('day').add(3, 'days').valueOf(),
+  };
 
   $scope.selectedDayIndex = 0;
 
@@ -166,16 +172,16 @@ angular.module('cinemaApp')
 
   $scope.filterCinemas = function(params) {
     if (params.updateUrl) {
-      //$scope.resetFilters();
-      //updateUrl({ movie: params.movie });
+      $scope.resetFilters();
+      updateUrl({ movie: params.movie });
     }
-
-    $scope.selectedMovie = params.movie.id;
-    $scope.filters.moviename = params.movie.title;
-    $scope.selectedMovieObject = params.movie;
-    console.log('set selected movie',$scope.selectedMovie);
-
+    
     $timeout(function() {
+      $scope.selectedMovie = params.movie.id;
+      $scope.selectedMovieObject = params.movie;
+      console.log('set selected movie',$scope.selectedMovie);
+      //$scope.filters.moviename = params.movie.title;
+      //$scope.filters.moviename = 'blah';
     });
   };
 

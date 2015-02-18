@@ -43,9 +43,14 @@
 	<div class="film-strapline" ng-show="selectedMovie && selectedCinema">
 		<span class="film-strapline-content">Movie times for {{selectedMovieObject.title}} at {{selectedCinemaObject.title}}</span>
 	</div>
-	<div class="film-strapline" ng-show="!selectedMovie && !selectedCinema">
-		<span class="film-strapline-content">Movies at cinemas on the map
+	<div class="film-strapline" ng-show="!selectedMovie && !selectedCinema && !filters.moviename && filteredMovies.length > 0">
+		<span class="film-strapline-content">{{filteredMovies.length}} movies showing in this area
 		<h3>Drag/zoom map for movies elsewhere</h3>
+		</span>
+	</div>	
+	<div class="film-strapline" ng-show="!selectedMovie && !selectedCinema && filters.moviename">
+		<span class="film-strapline-content">Movies with '{{filters.moviename}}' in title
+		<h3>Type to filter list of films <button ng-click="filters.moviename=''">Clear</button></h3>
 		</span>
 	</div>	
 	<div class="film-strapline" ng-show="selectedCinema && !selectedMovie">
@@ -76,7 +81,7 @@
 		<div 
 		ng-show="([movie] | filter:filters.moviename).length > 0"
 		ng-class="{'movie-highlight':movie.id===selectedMovie}" class="film" expand fixedHeight="184px">
-			<a ng-click="open = !open"><div class="show-more" ng-hide="open">See more <i class="fa fa-caret-down"></i></div></a>
+			<a ng-click="open = !open"><div class="show-more" ng-hide="open">See more & showtimes <i class="fa fa-caret-down"></i></div></a>
 			<div class="film-poster">
 				<img ng-src="{{::movie.rt.poster}}" alt="{{::movie.title}}" width="109" height="162">
 			</div>
@@ -109,7 +114,7 @@
 						</div>					
 					</div>
 
-				<movie-times></movie-times>				
+				<movie-times data-cinemas="{{cinemas}}"></movie-times>				
 
 				<p>{{::movie.imdb.genre.join(', ')}}</p>
 				<p>{{::movie.imdb.synopsis}}</p>
@@ -124,7 +129,7 @@
 			</div>
 			</div>
 
-			<div class="show-less"><a ng-click="open = !open">See less</a></div>
+			<div class="show-less" ng-click="open = !open"><a>See less</a></div>
 		</div>
 	</div>
 </div>
