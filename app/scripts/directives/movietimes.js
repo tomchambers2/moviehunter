@@ -39,13 +39,14 @@ angular.module('cinemaApp')
           updateDetails();
         });        
 
-        attrs.$observe('cinemas', function(value) {
+        //attrs.$observe('cinemas', function(value) {
+        scope.$watch('cinemas', function(value) {
           if (!scope.open) return;
           console.log('cinemas have changed - updating');
-          value = JSON.parse(value);
+          //value = JSON.parse(value);
           scope.cinemaList = value;
           updateDetails();
-        });
+        }, true);
 
         function addOtherDay(day, cinema, array) {
           if (scope.movie[cinema.tid][scope.selectedDays[day]]) {
@@ -70,8 +71,13 @@ angular.module('cinemaApp')
                     if (scope.selectedDays[j] === scope.selectedDay) continue;
                     addOtherDay(j, cinema, otherDays);
                 };
-                html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+
-                '<p><i>No times '+moment(scope.selectedDay).format('dddd')+'. Showing '+otherDays.join(', ')+'</i></p></div>');
+                if (otherDays.length) {
+                  html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+ 
+                  '<p><i>No times '+moment(scope.selectedDay).format('dddd')+'. Showing '+otherDays.join(', ')+'</i></p></div>');
+                } else {
+                  html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+ 
+                  '<p><i>No times '+moment(scope.selectedDay).format('dddd'));
+                }
               } else {
                 html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' today</p>'+
                 '<p>'+scope.movie[cinema.tid][scope.selectedDay].times.join(' | ')+'</p></div>');

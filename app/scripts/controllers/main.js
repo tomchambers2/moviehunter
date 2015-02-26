@@ -25,10 +25,6 @@ angular.module('cinemaApp')
     moviename: ''
   };
 
-  $scope.$watch('filters.moviename', function() {
-    $scope.selectedMovie = null;
-  })
-
   $scope.selectedMovie = null;
   $scope.selectedCinema = null;
   $scope.selectedDay = moment().startOf('day').valueOf();
@@ -63,7 +59,6 @@ angular.module('cinemaApp')
 
     $scope.selectedCinema = params.tid;
     $scope.selectedCinemaObject = params.cinema || cinema;
-    if (params.cinema) console.log('added',params.cinema.title);
     $scope.$apply(); //FIX: does this need to be here? timeout? batching?    
   };
 
@@ -180,8 +175,7 @@ angular.module('cinemaApp')
       $scope.selectedMovie = params.movie.id;
       $scope.selectedMovieObject = params.movie;
       console.log('set selected movie',$scope.selectedMovie);
-      //$scope.filters.moviename = params.movie.title;
-      //$scope.filters.moviename = 'blah';
+      $scope.filters.moviename = params.movie.title;
     });
   };
 

@@ -33,7 +33,7 @@
 			<div class="medium-12 columns">
 				<div class="search-box">
 					<div class="search-box-inner">
-						<input type="text" ng-model="filters.moviename" placeholder="Filter list by title (updates as you type)">
+						<input type="text" ng-model="filters.moviename" placeholder="Filter list by title (updates as you type)" ng-change="selectedMovie = null"><i ng-click="filters.moviename=''" ng-show="filters.moviename" class="clear-filter inside-input fa fa-times-circle"></i>
 					</div>
 				</div>
 			</div>
@@ -50,7 +50,9 @@
 	</div>	
 	<div class="film-strapline" ng-show="!selectedMovie && !selectedCinema && filters.moviename">
 		<span class="film-strapline-content">Movies with '{{filters.moviename}}' in title
-		<h3>Type to filter list of films <button ng-click="filters.moviename=''">Clear</button></h3>
+		<h3>Type to filter list of films
+		<i ng-click="filters.moviename=''" class="clear-filter fa fa-times-circle"></i>
+		</h3>
 		</span>
 	</div>	
 	<div class="film-strapline" ng-show="selectedCinema && !selectedMovie">
@@ -66,6 +68,10 @@
 
 	<div class="loading-movies" ng-hide="movies.length>0">
 		<h2>Loading movies now...</h2>
+		<div class="spinner">
+			<div class="double-bounce1"></div>
+			<div class="double-bounce2"></div>
+		</div>
 	</div>
 
 	<div class="film" ng-show="filters.moviename && !selectedCinema && filteredMovies.length<1">
@@ -97,28 +103,39 @@
 						<a ng-if="selectedMovie===movie.id" class="danger" ng-click="unfilterCinemas()"><i class="fa fa-times"></i> Reset map</a>
 						<a ng-if="filterOptions.movie==movie.title" ng-click="reset()">Reset map</a>	
 					</div>
-					<div class="small-6 columns">
+					<div class="small-4 columns">
 						<div class="rating">
 							<a ng-href="http://www.imdb.com/title/{{::movie.imdb.imdbId}}/" target="_blank" ng-if="movie.imdb.imdbId"><img src="/images/imdb.png" alt="IMDb" class="rating-link"></a>
-							<img ng-if="!movie.imdb.imdbId" src="/images/imdb.png" alt="IMDb"> <span class="figure">{{::movie.imdb.rating}}</span>
+							<img ng-if="!movie.imdb.imdbId" src="/images/imdb.png" alt="IMDb"> 
 						</div>					
 					</div>
-					<div class="small-6 columns">
+					<div class="small-2 columns">
+						<div class="rating">	
+							<span class="figure">{{::movie.imdb.rating}}</span>
+						</div>
+					</div>
+					<div class="small-3 columns">
 						<div class="rating">
 							<a ng-href="http://www.rottentomatoes.com/m/{{::movie.rt.rtId}}/" target="_blank">
 							<img src="/images/rotten.png" alt="Rotten" ng-if="movie.rt.rating<50" class="rating-link">
 							<img src="/images/fresh.png" alt="Fresh" ng-if="movie.rt.rating>50" class="rating-link">
 							<img src="/images/rtgrey.png" alt="Unknown" ng-if="movie.rt.rating===' --'" class="rating-link">
 							</a>
-							<span class="figure">{{::movie.rt.rating}}%</span>
 						</div>					
 					</div>
+					<div class="small-3 columns">
+						<div class="rating">
+							<span class="figure">{{::movie.rt.rating}}%</span>
+						</div>
+					</div>
 
-				<movie-times data-cinemas="{{cinemas}}"></movie-times>				
-
-				<p>{{::movie.imdb.genre.join(', ')}}</p>
-				<p>{{::movie.imdb.synopsis}}</p>
-				<p>Starring <strong>{{::movie.imdb.actors}}</strong></p>
+				<movie-times></movie-times>				
+				
+				<div class="clearfix">
+					<p>{{::movie.imdb.genre.join(', ')}}</p>
+					<p>{{::movie.imdb.synopsis}}</p>
+					<p>Starring <strong>{{::movie.imdb.actors}}</strong></p>
+				</div>
 				
 				<div class="medium-6 columns"><p><strong>{{::movie.rt.runtime}}</strong> minutes</p></div>
 				<div class="medium-6 columns">
@@ -160,8 +177,7 @@
 	<div class="strapline" ng-show="selectedMovie && !selectedCinema">
 		<span class="strapline-content">Only showing cinemas playing {{selectedMovieObject.title}} <i  ng-click="resetFilters()" class="reset-filters fa fa-times-circle"></i></span>
 	</div>
-
-	<markers data-cinemas="{{cinemas}}" data-selected-movie="{{selectedMovie}}" data-movies="{{movies}}" map="map" mc="mc"></markers>
+	<markers></markers>
 	<div id="map-canvas"></div>
 </div>
 

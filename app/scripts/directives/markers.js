@@ -14,8 +14,11 @@ angular.module('cinemaApp')
       	scope.markers = {};
       	scope.prevTids = [];
 
+        //this file needs to get alternately:
+        //cinemas, movies, selectedMovie, map, mc
+
         function updateMovieTimes(cinema) {
-          var movie = _.findWhere(scope.movies, { id: attrs.selectedMovie });
+          var movie = _.findWhere(scope.movies, { id: scope.selectedMovie });
           var date = scope.selectedDay;
           var movieTimes = [];
           movieTimes.push('<strong>Showtimes for '+moment(date).format('dddd')+'</strong>');
@@ -39,7 +42,14 @@ angular.module('cinemaApp')
               id: cinema.tid,
               icon: '/images/cinema_icons/cinema.png'
           });
-          var movies = JSON.parse(attrs.movies);
+          console.log('MARKER HAS BEEN CRATED');
+          
+          //// SCHEDULED FOR DEMOLITION, PLEASE REMOVE STUFF THAT IS ABOUT PARSING JSON
+          //var movies = JSON.parse(attrs.movies);
+          var movies = scope.movies;
+          ////
+
+
           cinema.movieDetails = [];
           cinema.movieTimes = [];
 
@@ -99,8 +109,11 @@ angular.module('cinemaApp')
           //if filter is set to null, fill in the cinemas not on map
           //if filter is set, remove cinemas not there, add cinemas prev removed by filter
 
-        attrs.$observe('selectedMovie', function(value) {
+        scope.$watch('selectedMovie', function(value, oldValue) {
           var i, cinema;
+
+          if (oldValue === value) return; //if its not changed, don't bother doing anything
+
           if (!value) {
             //no selected movie - all markers should be shown
             for (i = 0; i < scope.cinemaList.length; i++) {
@@ -141,9 +154,11 @@ angular.module('cinemaApp')
           }
         });
 
-        attrs.$observe('cinemas', function(value) {
-        	value = JSON.parse(value);
+        scope.$watch('cinemas', function(value) {
+          console.log('got a value for cinemas',value);
+        	//value = JSON.parse(value);
           scope.cinemaList = value;
+         //scope.cinemaList = cinemas; //MAKE CONSISTENT WITH MAIN SCOPE CINEMAS? WHY CINEMALIST?
 
           value = _.filter(value, function(cinema) {
             if (cinema!==null) {
@@ -172,7 +187,7 @@ angular.module('cinemaApp')
         	}
 
         	scope.prevTids = _.pluck(value,'tid');
-        });
+        }, true);
 
       }
     };

@@ -17,6 +17,14 @@ $custom-font: 'Francois One', sans-serif;
     scrollbar-arrow-color: #FFFFFF;
 }*/
 
+.clear-filter {
+	cursor: pointer;
+}
+.inside-input {
+	right: 28px;
+	position: absolute;
+	top: 20px;
+}
 
 .films::-webkit-scrollbar {
     width: 12px;
@@ -154,7 +162,11 @@ button {
 	}
 	.geolocation-button {
 		background: #75011B;
-		width: 20%;
+		width: 28%;
+		height: 26px;
+		padding: 1px;
+		position: absolute;
+		right: 0;
 	}
 	.search-movie {
 		text-align: center;
