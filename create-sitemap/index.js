@@ -3,7 +3,7 @@ var moment = require('moment');
 var Firebase = require('firebase');
 var _ = require('lodash');
 var fs = require('fs');
-var path = rqeuire('path');
+var path = require('path');
 
 var locations = require('./locations');
 
