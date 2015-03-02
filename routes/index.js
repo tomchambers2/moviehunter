@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/Sitemap.xml', function(req, res) {
 	res.set('Content-Type', 'text/xml');
-	res.sendfile('Sitemap.xml');
+	res.sendfile('/public/Sitemap.xml');
 });
 
 router.get('*', function(req, res) {

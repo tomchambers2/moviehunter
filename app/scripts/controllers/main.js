@@ -25,6 +25,8 @@ angular.module('cinemaApp')
     moviename: ''
   };
 
+  $scope.cinemasLoading = true;
+
   $scope.selectedMovie = null;
   $scope.selectedCinema = null;
   $scope.selectedDay = moment().startOf('day').valueOf();
@@ -96,6 +98,7 @@ angular.module('cinemaApp')
 
   geoQuery.on('key_entered', function(key) {
     cinemasRef.child(key).on('value', function(result) {
+      $scope.cinemasLoading = false;
       var cinema = result.val();
       if (cinema===null) return;
       if (_.findWhere($scope.cinemas, { tid: cinema.tid })) return;
@@ -295,6 +298,7 @@ angular.module('cinemaApp')
 
   /* search functions */
   $scope.doSearch = function(address) {
+    $scope.geolocationFailed = false;
     $scope.addressError = false;
     address = address ? address : $scope.address;
     $scope.loading = true;
@@ -364,6 +368,13 @@ angular.module('cinemaApp')
 
   var getLocationByIp = function() {
     geolocation.get().then(function(coords) {
+      if (coords==='not in the uk') {
+        $timeout(function() {
+          $scope.geolocationFailed = true;
+        });
+        return;
+      }
+
       $scope.showSearchResults(coords.latitude,coords.longitude);
     });
   };

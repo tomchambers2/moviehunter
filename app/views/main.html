@@ -1,3 +1,31 @@
+<div class="modal" ng-if="geolocationFailed" ng-init="geolocationFailed=true">
+	<div class="modal-inner">
+		<h1>Looks like you're outside the UK or we couldn't find you</h1>
+		<h2>Moviehunter only has cinema times for the UK (excluding NI) at the moment.</h2>
+		
+		<div class="row">
+			<div class="search-box">
+				<div class="search-box-inner clearfix">
+					<div class="medium-6 columns">
+						<input type="text" ng-model="address" placeholder="Enter UK place">
+					</div>
+					<div class="medium-6 columns">
+				 		<button ng-click="doSearch()" class="search-button">Search by location</button>
+						<button class="geolocation-button" ng-click="address='London' && doSearch()">See London</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="bottom">
+			<p>How much would you like to get movie listings for your country?</p>
+			<div class="button-group">
+				<button class="button button-danger">Don't care</button> <button class="btn btn-warning">Would use it</button> <button class="btn btn-sucesss">Really want it</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="films">
 	<div class="film-strapline">
 		<div class="row day-button-group"><button ng-class="{active:selectedDayIndex===0}" ng-click="selectDay(0)">Today</button><button ng-class="{active:selectedDayIndex===1}" ng-click="selectDay(1)">Tomorrow</button><button ng-class="{active:selectedDayIndex===2}" ng-click="selectDay(2)">{{::tomorrowPlus1}}</button><button ng-class="{active:selectedDayIndex===3}" ng-click="selectDay(3)">{{::tomorrowPlus2}}</button></div>
@@ -73,6 +101,10 @@
 			<div class="double-bounce2"></div>
 		</div>
 	</div>
+
+	<div class="film" ng-show="filteredMovies.length<1 && !filters.moviename">
+		<h2>No cinemas here! Zoom out or drag map.</h2>
+	</div>	
 
 	<div class="film" ng-show="filters.moviename && !selectedCinema && filteredMovies.length<1">
 		<h2>'{{filters.moviename}}' isn't showing in this area. Zoom out or drag to see show it's at cinemas elsewhere</h2>
@@ -168,9 +200,15 @@
 	<div class="strapline" ng-show="selectedMovie && selectedCinema">
 		<span class="strapline-content">{{selectedCinemaObject.title}} - {{selectedMovieObject.title}}</span>
 	</div>
-	<div class="strapline" ng-show="!selectedMovie && !selectedCinema">
-		<span class="strapline-content">Only showing cinemas in the map area</span>
+	<div class="strapline" ng-show="cinemas.length<1 && cinemasLoading">
+		<span class="strapline-content">Loading cinemas now...</span>
 	</div>	
+	<div class="strapline" ng-show="cinemas.length<1 && !cinemasLoading">
+		<span class="strapline-content">No cinemas here, drag map or zoom out</span>
+	</div>	
+	<div class="strapline" ng-show="cinemas.length>0 && !selectedMovie && !selectedCinema">
+		<span class="strapline-content">Only showing cinemas in the map area</span>
+	</div>
 	<div class="strapline" ng-show="selectedCinema && !selectedMovie">
 		<span class="strapline-content">Only showing {{selectedCinemaObject.title}} <i ng-click="resetFilters()" class="reset-filters fa fa-times-circle"></i></span>
 	</div>	
