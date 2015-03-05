@@ -19,7 +19,8 @@ angular
     'angulartics.segment.io',
     'angular-lodash',
     'angularMoment',
-    'ngPourOver'
+    'ngPourOver',
+    'autocomplete'
   ])
   .constant('angularMomentConfig', {
       timezone: 'Europe/London' // optional

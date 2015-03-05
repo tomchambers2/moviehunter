@@ -79,7 +79,7 @@ angular.module('cinemaApp')
                   '<p><i>No times '+moment(scope.selectedDay).format('dddd'));
                 }
               } else {
-                html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' today</p>'+
+                html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+
                 '<p>'+scope.movie[cinema.tid][scope.selectedDay].times.join(' | ')+'</p></div>');
               }
             };
@@ -91,7 +91,7 @@ angular.module('cinemaApp')
               return;
             }
             var cinema = _.findWhere(scope.cinemas, { tid: scope.selectedCinema });
-            var html = '<div class="times-box"><p>Showtimes for '+cinema.title+' today</p>'+
+            var html = '<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+
               '<p>'+scope.movie[scope.selectedCinema][scope.selectedDay].times.join(' | ')+'</p></div>';
             element.html(html);
           }

@@ -42,7 +42,6 @@ angular.module('cinemaApp')
               id: cinema.tid,
               icon: '/images/cinema_icons/cinema.png'
           });
-          console.log('MARKER HAS BEEN CRATED');
           
           //// SCHEDULED FOR DEMOLITION, PLEASE REMOVE STUFF THAT IS ABOUT PARSING JSON
           //var movies = JSON.parse(attrs.movies);
@@ -68,32 +67,30 @@ angular.module('cinemaApp')
 
             for (var i = 0; i < cinema.movies.length; i++) {
               movie = _.findWhere(movies, { id: cinema.movies[i] });
-              cinema.movieDetails.push(movie.title);
+              cinema.movieDetails.push('<a ng-click="searchMoviename=\'blahblah\'">'+movie.title+'</a>');
             }
           }
 
-          marker.movieInfo = '<strong>'+cinema.title+'</strong><br><i>Click icon to filter by this cinema</i><ul class="movie-list"><li>'+cinema.movieTimes.join('</li><li>')+'</li></ul>';
-          marker.cinemaInfo = '<strong>'+cinema.title+'</strong><br><i>Click icon to filter by this cinema</i><ul class="movie-list"><li>'+cinema.movieDetails.join('</li><li>')+'</li></ul>';
+          marker.movieInfo = '<strong>'+cinema.title+'</strong><br><i><a ng-click="">Filter by this cinema</a></i><ul class="movie-list"><li>'+cinema.movieTimes.join('</li><li>')+'</li></ul>';
+          marker.cinemaInfo = '<strong>'+cinema.title+'</strong><br><i><a ng-click="">Filter by this cinema</a></i><ul class="movie-list"><li>'+cinema.movieDetails.join('</li><li>')+'</li></ul>';
 
           var infowindow = new google.maps.InfoWindow({
               maxWidth: 230,
               disableAutoPan : true
           });
 
-          google.maps.event.addListener(marker, 'mouseover', function() {
+          google.maps.event.addListener(marker, 'click', function() {
             if (scope.selectedMovie) {
               infowindow.setContent(marker.movieInfo);
             } else {
               infowindow.setContent(marker.cinemaInfo);
             }
             infowindow.open(scope.map,marker);
+            scope.$apply();
           });
-          google.maps.event.addListener(marker, 'mouseout', function() {
-            infowindow.close(scope.map,marker);
-          }); 
-          google.maps.event.addListener(marker, 'click', function() {
-            $rootScope.$broadcast('selectedCinema',cinema.tid);
-          });                    
+          // google.maps.event.addListener(marker, 'click', function() {
+          //   $rootScope.$broadcast('selectedCinema',cinema.tid);
+          // });                    
           
           scope.mc.addMarker(marker);
           scope.markers[cinema.tid] = marker; 
@@ -155,7 +152,6 @@ angular.module('cinemaApp')
         });
 
         scope.$watch('cinemas', function(value) {
-          console.log('got a value for cinemas',value);
         	//value = JSON.parse(value);
           scope.cinemaList = value;
          //scope.cinemaList = cinemas; //MAKE CONSISTENT WITH MAIN SCOPE CINEMAS? WHY CINEMALIST?

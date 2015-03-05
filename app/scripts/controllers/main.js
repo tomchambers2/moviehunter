@@ -25,6 +25,8 @@ angular.module('cinemaApp')
     moviename: ''
   };
 
+  $scope.movieNames = [];
+
   $scope.cinemasLoading = true;
 
   $scope.selectedMovie = null;
@@ -68,15 +70,24 @@ angular.module('cinemaApp')
     $scope.selectedCinema = null;
   };
 
+  $scope.setMovienameFilter = function() {
+    $scope.filters.moviename = $scope.searchMoviename;
+  }
+  $scope.resetMovienameFilter = function() {
+    $scope.searchMoviename = '';
+    $scope.filters.moviename = '';
+  }
+
   $scope.resetFilters = function() {
     console.log('resetting');
+    $scope.searchMoviename = '';
     $scope.selectedCinema = null;
     $scope.selectedMovie = null;
     $scope.filters.moviename = '';
   };
 
   $scope.$on('selectedCinema', function(event, tid) {
-    $scope.selectCinema({ tid: tid });
+    $scope.selectCinema({ tid: tid, dontReset: true });
   });
 
   $scope.filterByMovieIds = function(item) {
@@ -131,6 +142,7 @@ angular.module('cinemaApp')
     var movie = result.val();
     movie.id = result.key(); //TODO: add firebase key when pushing once, instead of every time on client side
     $scope.movies.push(movie);
+    $scope.movieNames.push(movie.title);
     $scope.$apply(); //maybe swap for timeout or some way of batching calls, 61 is too many and too slow!
     //problem is that if I use timeout then it finishes after the cinema loads and causes error. this is a race condition and not good anyway...
   });
@@ -178,7 +190,7 @@ angular.module('cinemaApp')
       $scope.selectedMovie = params.movie.id;
       $scope.selectedMovieObject = params.movie;
       console.log('set selected movie',$scope.selectedMovie);
-      $scope.filters.moviename = params.movie.title;
+      $scope.filters.moviename = $scope.searchMoviename = params.movie.title;
     });
   };
 
@@ -199,7 +211,7 @@ angular.module('cinemaApp')
     var myLatlng = new google.maps.LatLng(51.5000,-0.1167);
     var mapOptions = {
       zoom: 14,
-      minZoom: 10,
+      minZoom: 14,
       center: myLatlng
     };
 
@@ -272,10 +284,10 @@ angular.module('cinemaApp')
       //is this ever a user created thing?
     } else if (params.movie) {
       $timeout(function() {
-        //TODO: maybe this should be a formatted address rather than lat long? although this is more accurate
         var path = $location.path();
         var locationParameter = path.match(/^(\/[a-z0-9.+-]+)/);  
         //perhaps should get coords from map rather than url?      
+
         $location.path(locationParameter[1]+'/'+params.movie.url, false);
       });
     } else if (params.cinema) {
@@ -296,6 +308,21 @@ angular.module('cinemaApp')
     }
   }
 
+  function addYouAreHereMarker(coords) {
+    if ($scope.youAreHereMarker) {
+      $scope.youAreHereMarker.setMap(null);
+    }
+    $scope.youAreHereMarker = new google.maps.Marker({
+        position: {
+          lat: coords.lat,
+          lng: coords.lng
+        },
+        map: $scope.map,
+        title: coords.formattedAddress,
+        id: 'youAreHere'
+    });    
+  }
+
   /* search functions */
   $scope.doSearch = function(address) {
     $scope.geolocationFailed = false;
@@ -303,6 +330,8 @@ angular.module('cinemaApp')
     address = address ? address : $scope.address;
     $scope.loading = true;
     Geocoder.latLngForAddress(address).then(function(coords) {
+        addYouAreHereMarker(coords);
+
         $scope.updateGeoQuery(coords.lat,coords.lng);
         setMap(coords.lat,coords.lng);
         $scope.loading = false;
@@ -354,7 +383,7 @@ angular.module('cinemaApp')
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition, showError);
       $scope.loading=true;
-      $scope.address='Finding your address automatically...';
+      $scope.address='Finding you...';
     } else {
       console.log('Geolocation is not available in this browser, please type your postcode manually');
     }
