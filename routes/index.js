@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/Sitemap.xml', function(req, res) {
+router.get('/app/public/Sitemap.xml', function(req, res) {
 	res.set('Content-Type', 'text/xml');
 	res.sendfile('Sitemap.xml');
 });
