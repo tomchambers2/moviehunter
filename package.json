@@ -21,6 +21,7 @@
     "moment": "^2.9.0",
     "morgan": "~1.0.0",
     "prerender-node": "^1.2.0",
+    "rsvp": "^3.0.17",
     "simple-xml-writer": "0.0.2",
     "static-favicon": "~1.0.0"
   },

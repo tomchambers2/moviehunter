@@ -35,15 +35,15 @@
 				<div class="search-box">
 					<div class="search-box-inner clearfix">
 						<form ng-submit="setMovienameFilter()">
-							<div class="medium-8 columns">
+							<div class="medium-6 columns">
 								<!-- ng-model="filters.moviename" -->
 								<!-- ng-change="selectedMovie = null" -->
 								<!-- on-select="setMovienameFilter()" -->
 <!-- 								<autocomplete data="movieNames"  attr-placeholder="Title or genre" ng-model="searchMoviename"></autocomplete>
  -->
-								<input type="text" ng-model="searchMoviename" placeholder="Movie search query"><i ng-click="resetMovienameFilter()" ng-show="filters.moviename" class="clear-filter inside-input fa fa-times-circle"></i>
+								<input type="text" ng-model="searchMoviename" placeholder="Movie title or genre"><i ng-click="resetMovienameFilter()" ng-show="filters.moviename" class="clear-filter inside-input fa fa-times-circle"></i>
 							</div>
-							<div class="medium-4 columns">
+							<div class="medium-6 columns">
 								<button ng-click="filters.moviename = searchMoviename;selectedMovie = null" class="search-button movie-search-button">Search movies</button>
 
 							</div>
@@ -98,15 +98,24 @@
 		</span>
 	</div>	
 	<div class="film-strapline" ng-show="selectedCinema && !selectedMovie">
-		<span class="film-strapline-content">Only movies at {{selectedCinemaObject.title}} <i ng-click="resetFilters()" class="reset-filters fa fa-times-circle"></i>
+		<span class="film-strapline-content">Movies at {{selectedCinemaObject.title}} <i ng-click="unselectCinema()" class="reset-filters fa fa-times-circle"></i>
 		<h3>Drag/zoom map for movie elsewhere</h3>	
 		</span>	
 	</div>	
-	<div class="film-strapline" ng-show="selectedMovie && !selectedCinema" ng-click="resetFilters()">
-		<span class="film-strapline-content">Click to clear filter <i  ng-click="resetFilters()" class="reset-filters fa fa-times-circle"></i>
+	<div class="film-strapline" ng-show="selectedMovie && !selectedCinema" ng-click="unselectCinema()">
+		<span class="film-strapline-content">Click to clear filter <i  ng-click="unselectCinema()" class="reset-filters fa fa-times-circle"></i>
 		<h3>Drag or zoom the map to see other cinemas playing {{selectedMovieObject.title}}</h3>
 		</span>		
 	</div>	
+
+<!-- 	<div class="film-strapline">
+		got any films? {{searchMoviesFast()}}
+	</div> -->
+
+<!-- 	<div class="film-strapline">
+		{{movies.length}}<br>
+		{{filteredMovies.length}}
+	</div>	 -->
 
 	<div class="loading-movies" ng-hide="movies.length>0">
 		<h2>Loading movies now...</h2>
@@ -114,10 +123,6 @@
 			<div class="double-bounce1"></div>
 			<div class="double-bounce2"></div>
 		</div>
-	</div>
-
-	<div class="film" ng-show="filteredMovies.length<1 && filters.moviename">
-		<h2>No cinemas here! Zoom out or drag map.</h2>
 	</div>
 
 	<div class="film" ng-show="filters.moviename && !selectedCinema && filteredMovies.length<1">
@@ -134,24 +139,13 @@
 		ng-show="([movie] | filter:filters.moviename).length > 0"
 		ng-class="{'movie-highlight':movie.id===selectedMovie}" class="film" expand fixedHeight="184px">
 			<a ng-click="open = !open"><div class="show-more" ng-hide="open">See more & showtimes <i class="fa fa-caret-down"></i></div></a>
-			<div class="film-poster">
+			<div class="film-poster" ng-click="open = !open">
 				<img ng-src="{{::movie.rt.poster}}" alt="{{::movie.title}}" width="109" height="162">
 			</div>
 			<div ng-click="open = !open" class="film-details" full-width margin="108">
 				<h2 class="film-title">{{::movie.title}}</h2>
 
 				<div class="row">
-					<div class="small-6 columns">
-						<a ng-click="openTrailer(movie)"><i class="fa fa-play"></i> Play trailer</a>
-					</div>
-					<div class="small-6 columns">
-						<a ng-if="selectedMovie!==movie.id && !selectedCinema" ng-click="filterCinemas({ movie: movie, updateUrl: true });open=!open"><i class="fa fa-film"></i> Where's it on?</a>
-
-						<a ng-if="selectedMovie!==movie.id && selectedCinema" ng-click="filterCinemas({ movie: movie, updateUrl: true });open=!open"><i class="fa fa-film"></i> Where else is it on?</a>
-
-						<a ng-if="selectedMovie===movie.id" class="danger" ng-click="unfilterCinemas()"><i class="fa fa-times"></i> Reset map</a>
-						<a ng-if="filterOptions.movie==movie.title" ng-click="reset()">Reset map</a>	
-					</div>
 					<div class="small-4 columns">
 						<div class="rating">
 							<a ng-href="http://www.imdb.com/title/{{::movie.imdb.imdbId}}/" target="_blank" ng-if="movie.imdb.imdbId"><img src="/images/imdb.png" alt="IMDb" class="rating-link"></a>
@@ -178,7 +172,11 @@
 						</div>
 					</div>
 
-				<movie-times></movie-times>				
+				<movie-times></movie-times>		
+
+				<div>
+					
+				</div>		
 				
 				<div class="clearfix">
 					<p>{{::movie.imdb.genre.join(', ')}}</p>
@@ -188,7 +186,7 @@
 				
 				<div class="medium-6 columns"><p><strong>{{::movie.rt.runtime}}</strong> minutes</p></div>
 				<div class="medium-6 columns">
-					<p ng-if="movie.rt.releaseDate">Released <span am-time-ago="::movie.rt.releaseDate"></span></p>
+					<p ng-if="movie.rt.releaseDate">Released <span time-ago="::movie.rt.releaseDate"></span></p>
 					<p ng-if="!movie.rt.releaseDate">Unknown release date</p>
 				</div>
 
@@ -206,34 +204,26 @@
 </div>
 
 <div class="map-container">
-	<div class="loading" ng-if="loading">
-		<div class="spinner">
-			<div class="double-bounce1"></div>
-			<div class="double-bounce2"></div>
-		</div>
-		<h1>Loading...</h1>
-	</div>
-
 	<div class="strapline" ng-show="selectedMovie && selectedCinema">
 		<span class="strapline-content">{{selectedCinemaObject.title}} - {{selectedMovieObject.title}}</span>
 	</div>
-	<div class="strapline loading" ng-show="cinemas.length<1 && cinemasLoading">
+	<div class="strapline map-loading" ng-show="cinemas.length<1 && cinemasLoading">
 		<span class="strapline-content">Loading cinemas now...</span>
 	</div>	
-	<div class="strapline loading" ng-hide="cinemas.length>0 || loading">
+	<div class="strapline map-loading" ng-hide="cinemas.length>0 || cinemasLoading">
 		<span class="strapline-content">No cinemas here, drag map or zoom out</span>
 	</div>
 	<div class="strapline" ng-show="selectedCinema && !selectedMovie">
-		<span class="strapline-content">Only showing {{selectedCinemaObject.title}} <i ng-click="resetFilters()" class="reset-filters fa fa-times-circle"></i></span>
+		<span class="strapline-content">{{selectedCinemaObject.title}} <i ng-click="unselectCinema()" class="reset-filters fa fa-times-circle"></i></span>
 	</div>	
 	<div class="strapline" ng-show="selectedMovie && !selectedCinema">
-		<span class="strapline-content">Only showing cinemas playing {{selectedMovieObject.title}} <i  ng-click="resetFilters()" class="reset-filters fa fa-times-circle"></i></span>
+		<span class="strapline-content">Cinemas playing {{selectedMovieObject.title}} <i  ng-click="resetFilters()" class="reset-filters fa fa-times-circle"></i></span>
 	</div>
 	<markers></markers>
 	<div id="map-canvas"></div>
 </div>
 
-<div class="list-container" ng-if="google">
+<!-- <div class="list-container" ng-if="google">
 	<div ng-repeat="cinema in cinemas | limitTo:3 track by $index">
 		<h1>{{::cinema.title}}</h1>
 		<h2>{{::cinema.address}} - {{::cinema.phone}}</h2>
@@ -241,4 +231,4 @@
 			<movie-times data-tid="{{::cinema.tid}}" data-movie-id="{{::movieId}}" data-movies="{{::movies}}" data-selected-day="{{::selectedDay}}"></movie-times>
 		</p>
 	</div>
-</div>
+</div> -->

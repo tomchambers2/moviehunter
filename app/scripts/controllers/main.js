@@ -8,11 +8,13 @@
  * Controller of the cinemaApp
  */
 angular.module('cinemaApp')
-.controller('MainCtrl', function ($scope, $location, $routeParams, $q, $timeout, Geocoder, geolocation, PourOver) {
+.controller('MainCtrl', function ($scope, $location, $routeParams, $q, $timeout, Geocoder, geolocation) {
   var ref = new Firebase('https://movielistings.firebaseio.com/');
   var cinemasRef = ref.child('cinemas');
   var moviesRef = ref.child('movies');
   var geoFire = new GeoFire(ref.child('cinemasGeofire'));  
+
+  $scope.loading = true;
 
   var defaultRadius = 2.813 //in km. change this if the default zoom changes to load all cinemas
 
@@ -50,27 +52,12 @@ angular.module('cinemaApp')
 
   $scope.cinemaMovies = {};
 
-  $scope.selectCinema = function(params) {
-    if (!params.dontReset) {
-      $scope.resetFilters();
-    }
-
-    var cinema;
-    if (!params.cinema) {
-      cinema = _.findWhere($scope.cinemas, { tid: params.tid });
-      updateUrl({cinema: cinema});
-    }
-
-    $scope.selectedCinema = params.tid;
-    $scope.selectedCinemaObject = params.cinema || cinema;
-    $scope.$apply(); //FIX: does this need to be here? timeout? batching?    
-  };
-
-  var unselectCinema = function() {
-    $scope.selectedCinema = null;
-  };
+  // $scope.searchMoviesFast = function() {
+  //   return _.some($scope.movies, $scope.filters.moviename);
+  // }
 
   $scope.setMovienameFilter = function() {
+    $scope.unselectCinema();
     $scope.filters.moviename = $scope.searchMoviename;
   }
   $scope.resetMovienameFilter = function() {
@@ -79,7 +66,6 @@ angular.module('cinemaApp')
   }
 
   $scope.resetFilters = function() {
-    console.log('resetting');
     $scope.searchMoviename = '';
     $scope.selectedCinema = null;
     $scope.selectedMovie = null;
@@ -180,17 +166,51 @@ angular.module('cinemaApp')
   ];
   $scope.filterFn = sortByRtRating;
 
-  $scope.filterCinemas = function(params) {
-    if (params.updateUrl) {
+  $scope.selectCinema = function(params) {
+    if (!params.dontReset) {
       $scope.resetFilters();
-      updateUrl({ movie: params.movie });
     }
+
+    var cinema;
+    if (!params.cinema) {
+      cinema = _.findWhere($scope.cinemas, { tid: params.tid });
+      updateUrl({cinema: cinema});
+    }
+
+    $timeout(function() {
+      $scope.selectedCinema = params.tid;      
+      $scope.selectedCinemaObject = params.cinema || cinema;
+    });
+  };
+
+  $scope.unselectCinema = function() {
+    unselectCinema();
+  }
+
+  var unselectCinema = function() {
+    $timeout(function() {
+      updateUrl();
+      $scope.selectedCinema = null;
+    })
+  };  
+
+  $scope.filterCinemas = function(params) {
+    var movie = _.findWhere($scope.movies, { id: params.movie });
+    if (params.reset) {
+      $scope.resetFilters();
+    }
+    if (params.updateUrl) {
+      updateUrl({ movie: movie });
+    }
+
     
     $timeout(function() {
-      $scope.selectedMovie = params.movie.id;
-      $scope.selectedMovieObject = params.movie;
-      console.log('set selected movie',$scope.selectedMovie);
-      $scope.filters.moviename = $scope.searchMoviename = params.movie.title;
+      //$scope.selectedMovie = movie.id;
+      //$scope.selectedMovieObject = movie;
+      $scope.filters.moviename = $scope.searchMoviename = movie.title;
+      if (params.cinema) {
+        $scope.selectCinema({ cinema: params.cinema, dontReset: true });
+      } 
     });
   };
 
@@ -280,37 +300,37 @@ angular.module('cinemaApp')
   };
 
   var updateUrl = function(params) {
-    if (params.movie && params.cinema ) {
+    if (params && params.movie && params.cinema) {
       //is this ever a user created thing?
-    } else if (params.movie) {
+      return;
+    } else if (params && params.movie) {
       $timeout(function() {
-        var path = $location.path();
-        var locationParameter = path.match(/^(\/[a-z0-9.+-]+)/);  
-        //perhaps should get coords from map rather than url?      
-
-        $location.path(locationParameter[1]+'/'+params.movie.url, false);
+        var location = $scope.map.center.k + '+' + $scope.map.center.D;
+        $location.path(location+'/'+params.movie.url, false);
       });
-    } else if (params.cinema) {
+      return;
+    } else if (params && params.cinema) {
       $timeout(function() {
         //TODO: maybe this should be a formatted address rather than lat long? although this is more accurate
         $location.path('/cinema/'+params.cinema.url, false);
-      });    
-    } else {
-      $timeout(function() {
-        //TODO: maybe this should be a formatted address rather than lat long? although this is more accurate        
-        if ($scope.selectedMovie) {
-          var movie = _.findWhere($scope.movies, { id: $scope.selectedMovie });
-          $location.path('/'+params.coords.lat+'+'+params.coords.lng+'/'+movie.url, false);
-        } else {
-          $location.path('/'+params.coords.lat+'+'+params.coords.lng, false);
-        }
       });
+      return;
     }
+    $timeout(function() {
+      //TODO: maybe this should be a formatted address rather than lat long? although this is more accurate        
+      var location = $scope.map.center.k + '+' + $scope.map.center.D;
+      if ($scope.selectedMovie) {
+        var movie = _.findWhere($scope.movies, { id: $scope.selectedMovie });
+        $location.path('/'+location+'/'+movie.url, false);
+      } else {
+        $location.path('/'+location, false);
+      }
+    });
   }
 
   function addYouAreHereMarker(coords) {
     if ($scope.youAreHereMarker) {
-      $scope.youAreHereMarker.setMap(null);
+      $scope.youAreHereMarker.setMap(null); //remove old marker
     }
     $scope.youAreHereMarker = new google.maps.Marker({
         position: {
@@ -385,14 +405,14 @@ angular.module('cinemaApp')
       $scope.loading=true;
       $scope.address='Finding you...';
     } else {
-      console.log('Geolocation is not available in this browser, please type your postcode manually');
+      console.warn('Geolocation is not available in this browser, please type your postcode manually');
     }
   };
   var showPosition = function(pos) {
     $scope.showSearchResults(pos.coords.latitude, pos.coords.longitude);
   };
   var showError = function() {
-    console.log('Geolocation failed or permission was denied');
+    console.warn('Geolocation failed or permission was denied');
   };  
 
   var getLocationByIp = function() {
@@ -411,11 +431,11 @@ angular.module('cinemaApp')
   //LOCATION AND MOVIE
   var coords;
   if ($routeParams.location && $routeParams.movie) {
-    console.log('LOCATION AND MOVIE');
+    console.info('LOCATION AND MOVIE');
     moviesRef.orderByChild('url').equalTo($routeParams.movie).on('child_added', function(result) {
       var movie = result.val();
       movie.id = result.key();
-      $scope.filterCinemas({ movie: movie, updateUrl: false });
+      $scope.filterCinemas({ movie: movie.id, updateUrl: false });
       $timeout(function() {
         $scope.filters.moviename = movie.title;
       });
@@ -428,12 +448,11 @@ angular.module('cinemaApp')
     }
   //CINEMA AND MOVIE
   } else if ($routeParams.cinema && $routeParams.movie) {
-    console.log('CINEMA AND MOVIE',$routeParams.cinema, $routeParams.movie);
+    console.info('CINEMA AND MOVIE',$routeParams.cinema, $routeParams.movie);
     moviesRef.orderByChild('url').equalTo($routeParams.movie).on('child_added', function(result) {
       var movie = result.val();
-      console.log('got movie',movie);
       movie.id = result.key();
-      $scope.filterCinemas({ movie: movie, updateUrl: false });
+      $scope.filterCinemas({ movie: movie.id, updateUrl: false });
       $timeout(function() {      
         $scope.filters.moviename = movie.title;
       });
@@ -454,13 +473,13 @@ angular.module('cinemaApp')
     }    
   //MOVIE ONLY
   } else if ($routeParams.movie) {
-    console.log('MOVIE ONLY');
+    console.info('MOVIE ONLY');
     getLocationByIp();
     moviesRef.orderByChild('url').equalTo($routeParams.movie).on('child_added', function(result) {
-      console.log('got movie',result.val());
+      console.info('got movie',result.val());
       var movie = result.val();
       movie.id = result.key();
-      $scope.filterCinemas({ movie: movie, updateUrl: true });
+      $scope.filterCinemas({ movie: movie.id, updateUrl: true });
       $timeout(function() {      
         $scope.filters.moviename = movie.title;
       });

@@ -10,48 +10,34 @@
 /*global angular: true, _ : true */
 
 angular.module('cinemaApp')
-  .directive('movieTimes', function () {
+  .directive('movieTimes', ['$compile', function ($compile) {
     return {
-      template: '<div></div>',
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
-        //TODO: this isn't quite right. or is it? at the moment, it will only reveal
-        // movie times when you open the tab. I'm not sure whether that's better than
-        // recalculating everything every time you move. which is a bit nuts. probably is.
-        // don't bother updating things that are off screen. be just in time.
-        // so now it updates only if the tab is open.
-
-        scope.$watch('open', function(value) {
-          if (!value) return;
-          console.log('opened - updating');
-          updateDetails();
-        });
-
         scope.$watch('selectedCinema', function() {
-          if (!scope.open) return;
-          console.log('cinema selected - updating');
           updateDetails();
         });
 
         scope.$watch('selectedDay', function() {
-          if (!scope.open) return;
-          console.log('cinema selected - updating');
           updateDetails();
         });        
 
-        //attrs.$observe('cinemas', function(value) {
         scope.$watch('cinemas', function(value) {
-          if (!scope.open) return;
-          console.log('cinemas have changed - updating');
-          //value = JSON.parse(value);
           scope.cinemaList = value;
           updateDetails();
         }, true);
 
         function addOtherDay(day, cinema, array) {
           if (scope.movie[cinema.tid][scope.selectedDays[day]]) {
-            array.push('<a ng-click="selectDay('+day+')">'+moment(scope.selectedDays[day]).format('dddd')+'</a>');
+            array.push('<a ng-click="selectDay('+day+');$event.stopPropagation()">'+moment(scope.selectedDays[day]).format('dddd')+'</a>');
           }
+        }
+
+        scope.bounce = function(tid) {
+          scope.$emit('bounce', tid);
+        }
+        scope.stopBounce = function(tid) {
+          scope.$emit('stopBounce', tid);
         }
 
         // TODO: this should get a list of tids fromt he movie object, but it needs to
@@ -72,31 +58,40 @@ angular.module('cinemaApp')
                     addOtherDay(j, cinema, otherDays);
                 };
                 if (otherDays.length) {
-                  html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+ 
-                  '<p><i>No times '+moment(scope.selectedDay).format('dddd')+'. Showing '+otherDays.join(', ')+'</i></p></div>');
+                  //CINEMA NOT SHOWING TODAY, BUT OTHER DAYS
+                  html.push('<div class="times-box" ng-mouseover="bounce(\''+cinema.tid+'\')" ng-mouseleave="stopBounce(\''+cinema.tid+'\')"><p>'+cinema.title+'</p>'+ 
+                  '<p>Showing '+otherDays.join(', ')+'</i></p></div>');
                 } else {
-                  html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+ 
-                  '<p><i>No times '+moment(scope.selectedDay).format('dddd'));
+                  html.push('<div class="times-box"  ng-mouseover="bounce(\''+cinema.tid+'\')" ng-mouseleave="stopBounce(\''+cinema.tid+'\')"><p>'+cinema.title+'</p>'+'<p><i>Not showing here</i></p>');
                 }
               } else {
-                html.push('<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+
+                html.push('<div class="times-box" ng-mouseover="bounce(\''+cinema.tid+'\')" ng-mouseleave="stopBounce(\''+cinema.tid+'\')"><p>'+cinema.title+'</p>'+
                 '<p>'+scope.movie[cinema.tid][scope.selectedDay].times.join(' | ')+'</p></div>');
               }
             };
+
+            html.unshift('<p class="text-center"><strong>'+moment(scope.selectedDay).format('dddd')+' showtimes</strong></p>');
+
             element.html(html);
+            $compile(element.contents())(scope);     
             return;
           } else {          
             if (!scope.movie[scope.selectedCinema][scope.selectedDay]) {
-              element.html('<div class="times-box"><p>Not showing here on '+moment(scope.selectedDay).format('dddd')+'</p></div>');
+              element.html('<div class="times-box" ng-mouseover="bounce(\''+scope.selectedCinemaObject.tid+'\')" ng-mouseleave="stopBounce(\''+scope.selectedCinemaObject.tid+'\')"><p>Not showing here</p></div>');
+              element.html(html);
+              $compile(element.contents())(scope); 
               return;
             }
             var cinema = _.findWhere(scope.cinemas, { tid: scope.selectedCinema });
-            var html = '<div class="times-box"><p>Showtimes for '+cinema.title+' '+moment(scope.selectedDay).format('dddd')+'</p>'+
+            var html = '<p class="text-center"><strong>'+moment(scope.selectedDay).format('dddd')+' showtimes</strong></p> <div class="times-box" ng-mouseover="bounce(\''+cinema.tid+'\')" ng-mouseleave="stopBounce(\''+cinema.tid+'\')"><p>'+cinema.title+'</p>'+
               '<p>'+scope.movie[scope.selectedCinema][scope.selectedDay].times.join(' | ')+'</p></div>';
             element.html(html);
+            $compile(element.contents())(scope); 
           }
 
         }
+
+        updateDetails();
       }
     };
-  });
+  }]);

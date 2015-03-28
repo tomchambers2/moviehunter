@@ -1,10 +1,13 @@
 var express = require('express');
 var router = express.Router();
+var sitemap = require('../create-sitemap/index');
 
 /* GET home page. */
 router.get('/app/public/Sitemap.xml', function(req, res) {
-	res.set('Content-Type', 'text/xml');
-	res.sendfile('Sitemap.xml');
+	sitemap.generate().then(function(data) {
+		res.set('Content-Type', 'text/xml');
+		res.send(data);
+	});
 });
 
 router.get('*', function(req, res) {

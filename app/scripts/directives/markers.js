@@ -7,15 +7,15 @@
  * # markers
  */
 angular.module('cinemaApp')
-  .directive('markers', function ($rootScope) {
+  .directive('markers', ['$compile','$rootScope', function($compile, $rootScope) {
     return {
       restrict: 'E',
       link: function postLink(scope, element, attrs) {
       	scope.markers = {};
       	scope.prevTids = [];
 
-        //this file needs to get alternately:
-        //cinemas, movies, selectedMovie, map, mc
+        var ICON_PATH = '/images/cinema_icons/cinema.png';
+        var DISABLED_ICON_PATH = '/images/cinema_icons/cinema_disabled.png';
 
         function updateMovieTimes(cinema) {
           var movie = _.findWhere(scope.movies, { id: scope.selectedMovie });
@@ -40,14 +40,12 @@ angular.module('cinemaApp')
               map: scope.map,
               title: cinema.title,
               id: cinema.tid,
-              icon: '/images/cinema_icons/cinema.png'
+              icon: ICON_PATH
           });
           
           //// SCHEDULED FOR DEMOLITION, PLEASE REMOVE STUFF THAT IS ABOUT PARSING JSON
-          //var movies = JSON.parse(attrs.movies);
           var movies = scope.movies;
           ////
-
 
           cinema.movieDetails = [];
           cinema.movieTimes = [];
@@ -66,13 +64,15 @@ angular.module('cinemaApp')
             }
 
             for (var i = 0; i < cinema.movies.length; i++) {
+              //console.log('looking for',cinema.movies[i]);
               movie = _.findWhere(movies, { id: cinema.movies[i] });
-              cinema.movieDetails.push('<a ng-click="searchMoviename=\'blahblah\'">'+movie.title+'</a>');
+              if (!movie) continue;
+              cinema.movieDetails.push('<a ng-click="filterCinemas({ movie: \''+cinema.movies[i]+'\', cinema: \''+cinema.tid+'\', updateUrl: true })">'+movie.title+'</a>');
             }
           }
 
-          marker.movieInfo = '<strong>'+cinema.title+'</strong><br><i><a ng-click="">Filter by this cinema</a></i><ul class="movie-list"><li>'+cinema.movieTimes.join('</li><li>')+'</li></ul>';
-          marker.cinemaInfo = '<strong>'+cinema.title+'</strong><br><i><a ng-click="">Filter by this cinema</a></i><ul class="movie-list"><li>'+cinema.movieDetails.join('</li><li>')+'</li></ul>';
+          marker.movieInfo = '<div><strong>'+cinema.title+'</strong><br><i><a ng-click="selectCinema({ tid: \''+cinema.tid+'\', dontReset: true })">Filter by this cinema</a></i><ul class="movie-list"><li>'+cinema.movieTimes.join('</li><li>')+'</li></ul></div>';
+          marker.cinemaInfo = '<div><strong>'+cinema.title+'</strong><br><i><a ng-click="selectCinema({ tid: \''+cinema.tid+'\', dontReset: true })">Filter by this cinema</a></i><ul class="movie-list"><li>'+cinema.movieDetails.join('</li><li>')+'</li></ul></div>';
 
           var infowindow = new google.maps.InfoWindow({
               maxWidth: 230,
@@ -81,12 +81,13 @@ angular.module('cinemaApp')
 
           google.maps.event.addListener(marker, 'click', function() {
             if (scope.selectedMovie) {
-              infowindow.setContent(marker.movieInfo);
+              var compiled = $compile(marker.movieInfo)(scope); 
+              infowindow.setContent(compiled[0]);
             } else {
-              infowindow.setContent(marker.cinemaInfo);
+              var compiled = $compile(marker.cinemaInfo)(scope); 
+              infowindow.setContent(compiled[0]);
             }
             infowindow.open(scope.map,marker);
-            scope.$apply();
           });
           // google.maps.event.addListener(marker, 'click', function() {
           //   $rootScope.$broadcast('selectedCinema',cinema.tid);
@@ -102,9 +103,63 @@ angular.module('cinemaApp')
           delete scope.markers[tid];
         }
 
-        //watch for change in movie filter
-          //if filter is set to null, fill in the cinemas not on map
-          //if filter is set, remove cinemas not there, add cinemas prev removed by filter
+        function bounceMarker(tid) {
+          scope.markers[tid].setAnimation(google.maps.Animation.BOUNCE);
+        }
+        function stopBouncing(tid) {
+          scope.markers[tid].setAnimation(null);
+        }
+        $rootScope.$on('bounce', function(event, tid) {
+          bounceMarker(tid);
+        });
+        $rootScope.$on('stopBounce', function(event, tid) {
+          stopBouncing(tid);
+        });
+
+
+        function updateMarkerIcon(tid, state) {
+          if (!scope.markers[tid]) {
+            console.error(tid,'does not exist');
+            return;
+          }
+          if (state==='default') {
+            scope.markers[tid].setIcon(ICON_PATH);
+          } else if (state==='disabled') {
+            scope.markers[tid].setIcon(DISABLED_ICON_PATH);
+          }
+        }
+
+        function updateCinemaIcons(moviename) {
+          moviename = moviename || scope.filters.moviename;
+
+          if (moviename === '') {
+            for (var i = 0; i < scope.cinemas.length; i++) {
+              updateMarkerIcon(scope.cinemas[i].tid, 'default');
+            };
+            return;
+          }
+
+          var filteredMovies = _.filter(scope.movies, function(movie) {
+            var title = movie.title.toLowerCase();
+            if (title.indexOf(moviename.toLowerCase())>-1) {
+              return true;
+            }
+          });
+
+          for (var i = 0; i < scope.cinemas.length; i++) {
+            for (var j = 0; j < filteredMovies.length; j++) {
+              if (scope.cinemas[i].movies.indexOf(filteredMovies[j].id)>-1) {
+                updateMarkerIcon(scope.cinemas[i].tid, 'default');
+              } else {
+                updateMarkerIcon(scope.cinemas[i].tid, 'disabled');
+              }
+            };
+          };          
+        }
+
+        scope.$watch('filters.moviename', function(moviename) {
+          updateCinemaIcons();
+        });
 
         scope.$watch('selectedMovie', function(value, oldValue) {
           var i, cinema;
@@ -147,7 +202,9 @@ angular.module('cinemaApp')
                   updateMovieTimes(cinema);
                 }
               }
-            }           
+            }
+
+            updateCinemaIcons();          
           }
         });
 
@@ -183,8 +240,10 @@ angular.module('cinemaApp')
         	}
 
         	scope.prevTids = _.pluck(value,'tid');
+
+          updateCinemaIcons();
         }, true);
 
       }
     };
-  });
+  }]);
