@@ -1,27 +1,37 @@
-<div class="modal" ng-if="geolocationFailed" ng-init="geolocationFailed=true">
+<div class="modal"  ng-if="geolocationFailed">
 	<div class="modal-inner">
-		<h1>Looks like you're outside the UK or we couldn't find you</h1>
-		<h2>Moviehunter only has cinema times for the UK (excluding NI) at the moment.</h2>
+		<h1>Looks like you're outside GB or we couldn't find you</h1>
+		<h2>Moviehunter only has cinema times for Great Britain at the moment</h2>
 		
 		<div class="row">
-			<div class="search-box">
-				<div class="search-box-inner clearfix">
-					<div class="medium-6 columns">
-						<input type="text" ng-model="address" placeholder="Enter UK place">
-					</div>
-					<div class="medium-6 columns">
-				 		<button ng-click="doSearch()" class="search-button">Search by location</button>
-						<button class="geolocation-button" ng-click="address='London' && doSearch()">See London</button>
+			<div class="medium-8 columns medium-offset-2">
+				<div class="row">
+					<div class="search-box">
+						<div class="search-box-inner clearfix">
+							<div class="medium-12 columns">
+								<input type="text" ng-model="address" placeholder="Enter UK place">
+							</div>
+							<div class="medium-12 columns">
+						 		<button ng-click="closeModal && doSearch()" class="modal-button">Search for location</button>
+
+								<button class="modal-button" ng-click="closeModal() && doSearch('london')">See London</button>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="bottom">
+		<div class="bottom" ng-hide="voted">
 			<p>How much would you like to get movie listings for your country?</p>
 			<div class="button-group">
-				<button class="button button-danger">Don't care</button> <button class="btn btn-warning">Would use it</button> <button class="btn btn-sucesss">Really want it</button>
+				<button ng-click="vote('dont care')" class="alert">Don't care</button>
+				<button ng-click="vote('would use')">Would use it</button>
+				<button ng-click="vote('really want')" class="success">Really want it</button>
 			</div>
+		</div>
+		<div class="bottom" ng-show="voted">
+			<p>Thanks for your feedback!</p>
 		</div>
 	</div>
 </div>
@@ -106,16 +116,22 @@
 		<span class="film-strapline-content">Click to clear filter <i  ng-click="unselectCinema()" class="reset-filters fa fa-times-circle"></i>
 		<h3>Drag or zoom the map to see other cinemas playing {{selectedMovieObject.title}}</h3>
 		</span>		
-	</div>	
+	</div>
 
-<!-- 	<div class="film-strapline">
-		got any films? {{searchMoviesFast()}}
-	</div> -->
-
-<!-- 	<div class="film-strapline">
-		{{movies.length}}<br>
-		{{filteredMovies.length}}
-	</div>	 -->
+	<div class="film"  ng-hide="movies.length<1	">
+		<div class="film-poster" ng-click="open = !open">
+			<img src="/images/bogart.png" alt="No films here buddy" width="109" height="162">
+		</div>	
+		<div  class="film-details" full-width margin="108">
+			<div class="row">
+				<div class="small-12 columns">
+					<h2>Want to see more films?</h2>
+					<p>Find more films by dragging the map or zooming out.</p>
+					<p>Only movies showing at cinemas in the map area show up in the list.</p>
+				</div>
+			</div>	
+		</div>
+	</div>
 
 	<div class="loading-movies" ng-hide="movies.length>0">
 		<h2>Loading movies now...</h2>

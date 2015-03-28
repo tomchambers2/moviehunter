@@ -15,6 +15,19 @@ angular.module('cinemaApp')
   var geoFire = new GeoFire(ref.child('cinemasGeofire'));  
 
   $scope.loading = true;
+  $scope.voted = false;
+
+  $scope.vote = function(choice) {
+    mixpanel.track(
+      "Vote",
+      { "Choice": choice }
+    );
+    $scope.voted = true;
+  };
+
+  $scope.closeModal = function() {
+    $scope.geolocationFailed = false;
+  };  
 
   var defaultRadius = 2.813 //in km. change this if the default zoom changes to load all cinemas
 
@@ -52,9 +65,9 @@ angular.module('cinemaApp')
 
   $scope.cinemaMovies = {};
 
-  // $scope.searchMoviesFast = function() {
-  //   return _.some($scope.movies, $scope.filters.moviename);
-  // }
+  $scope.searchMoviesFast = function() {
+    return _.some($scope.movies, $scope.filters.moviename);
+  }
 
   $scope.setMovienameFilter = function() {
     $scope.unselectCinema();
@@ -88,6 +101,7 @@ angular.module('cinemaApp')
   };
 
   $scope.selectDay = function(adjust) {
+    mixpanel.track("selectday", { adjust: adjust });
     $scope.selectedDay = moment().add(adjust, 'days').startOf('day').valueOf();
     $scope.selectedDayIndex = parseInt(adjust, 10);
     //FIX: should get the formatted string of the day, not the moment object
@@ -177,6 +191,8 @@ angular.module('cinemaApp')
       updateUrl({cinema: cinema});
     }
 
+    mixpanel.track("Select cinema", { "Cinema": cinema.title });
+
     $timeout(function() {
       $scope.selectedCinema = params.tid;      
       $scope.selectedCinemaObject = params.cinema || cinema;
@@ -184,10 +200,12 @@ angular.module('cinemaApp')
   };
 
   $scope.unselectCinema = function() {
+    mixpanel.track("Unselect cinema");
     unselectCinema();
   }
 
   var unselectCinema = function() {
+    mixpanel.track("Unselect cinema");
     $timeout(function() {
       updateUrl();
       $scope.selectedCinema = null;
@@ -196,6 +214,7 @@ angular.module('cinemaApp')
 
   $scope.filterCinemas = function(params) {
     var movie = _.findWhere($scope.movies, { id: params.movie });
+    mixpanel.track("Select movie",movie.title);
     if (params.reset) {
       $scope.resetFilters();
     }
@@ -274,6 +293,7 @@ angular.module('cinemaApp')
     });    
 
     google.maps.event.addListener(map, 'dragend', function() {
+      mixpanel.track("Moved map", { coords: this.center });
       unselectCinema();
       $scope.updateGeoQuery(this.center.k, this.center.D);
       updateUrl({ coords: { lat: this.center.k, lng: this.center.D } });
@@ -348,6 +368,8 @@ angular.module('cinemaApp')
     $scope.geolocationFailed = false;
     $scope.addressError = false;
     address = address ? address : $scope.address;
+    $scope.address = address;
+    mixpanel.track('search', { location: $scope.address });
     $scope.loading = true;
     Geocoder.latLngForAddress(address).then(function(coords) {
         addYouAreHereMarker(coords);
@@ -415,12 +437,29 @@ angular.module('cinemaApp')
     console.warn('Geolocation failed or permission was denied');
   };  
 
+  var box = {
+    leftLng: -14.69970703125,
+    leftLat: 49.93707975697545,
+    rightLng: 7.31689453125,
+    rightLat: 59.097025270871335
+  }
+
+  function isInboundingBox(coords) {
+    if(box.leftLat <= coords.latitude && coords.latitude <= box.rightLat && box.leftLng <= coords.longitude && coords.longitude <= box.rightLng) {
+      return true;
+    }
+  }
+
   var getLocationByIp = function() {
     geolocation.get().then(function(coords) {
-      if (coords==='not in the uk') {
+      console.log("COORDS",coords);
+      if (!isInboundingBox(coords)) {
+        mixpanel.track('getip', { coords: $scope.address, uk: false });
+        console.log("NOT IN UK");
         $timeout(function() {
           $scope.geolocationFailed = true;
         });
+        mixpanel.track('getip', { coords: $scope.address, uk: true });
         return;
       }
 
