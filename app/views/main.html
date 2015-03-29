@@ -118,21 +118,6 @@
 		</span>		
 	</div>
 
-	<div class="film"  ng-hide="movies.length<1	">
-		<div class="film-poster" ng-click="open = !open">
-			<img src="/images/bogart.png" alt="No films here buddy" width="109" height="162">
-		</div>	
-		<div  class="film-details" full-width margin="108">
-			<div class="row">
-				<div class="small-12 columns">
-					<h2>Want to see more films?</h2>
-					<p>Find more films by dragging the map or zooming out.</p>
-					<p>Only movies showing at cinemas in the map area show up in the list.</p>
-				</div>
-			</div>	
-		</div>
-	</div>
-
 	<div class="loading-movies" ng-hide="movies.length>0">
 		<h2>Loading movies now...</h2>
 		<div class="spinner">
@@ -212,6 +197,21 @@
 			<div class="show-less" ng-click="open = !open"><a>See less</a></div>
 		</div>
 	</div>
+
+	<div class="film"  ng-hide="movies.length<1	">
+		<div class="film-poster" ng-click="open = !open">
+			<img src="/images/bogart.png" alt="No films here buddy" width="109" height="162">
+		</div>	
+		<div  class="film-details" full-width margin="108">
+			<div class="row">
+				<div class="small-12 columns">
+					<h2>Want to see more films?</h2>
+					<p>Find more films by dragging the map or zooming out.</p>
+					<p>Only movies showing at cinemas in the map area show up in the list.</p>
+				</div>
+			</div>	
+		</div>
+	</div>	
 </div>
 
 <div class="medium-12 columns trailer" ng-if="youtubeId">
