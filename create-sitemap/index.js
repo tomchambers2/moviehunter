@@ -4,7 +4,7 @@ var Firebase = require('firebase');
 var _ = require('lodash');
 var fs = require('fs');
 var path = require('path');
-var rsvp = require('rsvp');
+var RSVP = require('rsvp');
 
 module.exports = {
 	generate: generate,
@@ -29,6 +29,12 @@ function writeFile() {
 function generate() {
 	var promise = new RSVP.Promise(function(resolve, reject) {
 
+		var addUrl = function(url) {
+			urls.push(url);
+		}
+
+		var today = moment().format('YYYY-MM-DD');
+
 		var locations = require('./locations');
 
 		var ref = new Firebase('https://movielistings.firebaseio.com');
@@ -37,33 +43,11 @@ function generate() {
 		var movies;
 		var urls = [];
 
-		var cinemasComplete = false;
-		var cinemas = ref.child('cinemas').on('value', function(result) {
-		 	cinemas = _.values(result.val());
-		 	if (moviesComplete) {
-		 		buildXML();
-		 	} else {
-		 		cinemasComplete = true;
-		 	}	
-		});
-		var moviesComplete = false;
-		var movies = ref.child('movies').on('value', function(result) {
-		 	movies = _.values(result.val());
-		 	if (cinemasComplete) {
-		 		buildXML();
-		 	} else {
-		 		moviesComplete = true;
-		 	}
-		});
-
-		var addUrl = function(url) {
-			urls.push(url);
-		}
-
-		var today = moment().format('YYYY-MM-DD');
-
 		var buildXML = function() {	
-			var data = new XmlWriter(function(el) {
+			console.log("Building XML");
+			console.log('cinemas',cinemas);
+			console.log('movies',movies);
+			var xml = new XmlWriter(function(el) {
 			    el('urlset', function(el, at) {
 			        at('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
 			        //create url for each location
@@ -108,7 +92,31 @@ function generate() {
 			       	};
 			    });
 			}, { addDeclaration: true });
+			console.log("Will resolve with data",xml.data);
+			resolve(xml.data);	
 		}
-		resolve(data);
-	});		
+
+		var cinemasComplete = false;
+		var cinemas = ref.child('cinemas').on('value', function(result) {
+			console.log("Retrieved cinemas");
+		 	cinemas = _.values(result.val());
+		 	if (moviesComplete) {
+		 		buildXML();
+		 	} else {
+		 		cinemasComplete = true;
+		 	}	
+		});
+		var moviesComplete = false;
+		var movies = ref.child('movies').on('value', function(result) {
+			console.log("Retrieved movies");
+		 	movies = _.values(result.val());
+		 	if (cinemasComplete) {
+		 		buildXML();
+		 	} else {
+		 		moviesComplete = true;
+		 	}
+		});	
+	});
+
+	return promise;		
 }
